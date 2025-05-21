@@ -20,8 +20,8 @@ const PortfolioSection = ({ id }: PortfolioSectionProps) => {
       category: "scripts",
       client: "MidwestRP",
       images: [
-        "https://cdn.pixabay.com/photo/2021/10/08/20/28/game-6692376_1280.jpg",
-        "https://cdn.pixabay.com/photo/2021/09/07/07/11/game-6603193_1280.jpg",
+        "vortex-logo.png",
+        "vortex-logo.png",
       ],
     },
     {
@@ -32,8 +32,8 @@ const PortfolioSection = ({ id }: PortfolioSectionProps) => {
       category: "mlo",
       client: "LosVentures RP",
       images: [
-        "https://cdn.pixabay.com/photo/2021/09/07/01/12/police-6601253_1280.jpg",
-        "https://cdn.pixabay.com/photo/2017/08/01/20/06/police-2567810_1280.jpg",
+        "vortex-3.png",
+        "vortex-3.png",
       ],
     },
     {
@@ -44,8 +44,8 @@ const PortfolioSection = ({ id }: PortfolioSectionProps) => {
       category: "ui",
       client: "GrandState RP",
       images: [
-        "https://cdn.pixabay.com/photo/2016/11/29/12/30/phone-1869510_1280.jpg",
-        "https://cdn.pixabay.com/photo/2017/12/02/14/38/contact-form-2993183_1280.jpg",
+        "monzo1.png",
+        "monzo1.png",
       ],
     },
     {
@@ -56,8 +56,8 @@ const PortfolioSection = ({ id }: PortfolioSectionProps) => {
       category: "server",
       client: "NeonCity RP",
       images: [
-        "https://cdn.pixabay.com/photo/2018/03/27/12/16/analytics-3265840_1280.jpg",
-        "https://cdn.pixabay.com/photo/2016/11/30/20/44/computer-1873831_1280.png",
+        "vortex-5.png",
+        "vortex-5.png",
       ],
     },
   ];

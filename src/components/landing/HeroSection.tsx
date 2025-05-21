@@ -42,7 +42,7 @@ const HeroSection = ({ id, setActiveSection }: HeroSectionProps) => {
           loop
           playsInline
         >
-          <source src="https://drive.google.com/file/d/1tKBicxmruZCoez6KW6iTCsDvxFrpK9ON/view?usp=drive_link" type="video/mp4" />
+          <source src="night-city-in-gta-5.1920x1080.mp4" type="video/mp4" />
           Your browser does not support the video tag.
         </video>
       </div>

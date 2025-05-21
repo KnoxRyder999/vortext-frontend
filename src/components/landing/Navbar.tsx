@@ -52,8 +52,8 @@ const Navbar = ({ activeSection, setActiveSection }: NavbarProps) => {
     >
       <div className="container mx-auto px-4 py-3 md:py-4 flex items-center justify-between">
         <a href="#" className="flex items-center space-x-2">
-          <span className="text-2xl font-bold bg-gradient-to-r from-purple-500 via-blue-500 to-green-500 bg-clip-text text-transparent">
-            VortexBytes
+          <span className="text-2xl font-bold ">
+          🐬🎀𝒱𝑜𝓇𝓉𝑒𝓍𝐵𝓎𝓉𝑒𝓈 🎀🐬
           </span>
         </a>
 
