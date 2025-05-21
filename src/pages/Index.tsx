@@ -1,6 +1,6 @@
 
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
-import ActivityFeed from "@/components/dashboard/ActivityFeed";
+import ActivityFeed, { ActivityItem } from "@/components/dashboard/ActivityFeed";
 import SimpleAreaChart from "@/components/dashboard/SimpleAreaChart";
 import StatCard from "@/components/dashboard/StatCard";
 import { 
@@ -10,10 +10,12 @@ import {
   LineChart, 
   Activity 
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const Index = () => {
   // Sample data for activity feed
-  const activityItems = [
+  const activityItems: ActivityItem[] = [
     {
       id: "1",
       title: "Monthly target reached",
@@ -67,6 +69,12 @@ const Index = () => {
 
   return (
     <DashboardLayout>
+      <div className="mb-6">
+        <Button asChild variant="outline">
+          <Link to="/">Back to VortexBytes Landing Page</Link>
+        </Button>
+      </div>
+      
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         <StatCard
           title="Total Revenue"

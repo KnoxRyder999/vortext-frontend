@@ -1,7 +1,7 @@
 
-import React, { useCallback } from "react";
+import { useCallback } from "react";
 import Particles from "react-tsparticles";
-import type { Engine } from "tsparticles-engine";
+import type { Container, Engine } from "tsparticles-engine";
 import { loadSlim } from "tsparticles-slim";
 
 interface ConfettiProps {
@@ -13,13 +13,18 @@ const Confetti = ({ isActive }: ConfettiProps) => {
     await loadSlim(engine);
   }, []);
 
+  const particlesLoaded = useCallback(async (container: Container | undefined) => {
+    await container?.refresh();
+  }, []);
+
   if (!isActive) return null;
 
   return (
     <Particles
-      id="tsparticles"
-      init={particlesInit}
+      id="confetti-particles"
       className="fixed inset-0 z-50 pointer-events-none"
+      init={particlesInit}
+      loaded={particlesLoaded}
       options={{
         fullScreen: {
           enable: true,
@@ -27,37 +32,34 @@ const Confetti = ({ isActive }: ConfettiProps) => {
         },
         particles: {
           number: {
-            value: 100,
+            value: 0,
           },
           color: {
-            value: [
-              "#9b87f5", // Primary purple
-              "#D946EF", // Pink
-              "#F97316", // Orange
-              "#0EA5E9", // Blue
-              "#F2FCE2", // Soft green
-              "#FEF7CD", // Soft yellow
-            ],
+            value: ["#00FFFC", "#FC00FF", "#fffc00"],
           },
           shape: {
-            type: ["circle", "square", "triangle"],
+            type: ["circle", "square"],
           },
           opacity: {
             value: 1,
             animation: {
               enable: true,
-              speed: 0.5,
               minimumValue: 0,
-              sync: false,
+              speed: 2,
               startValue: "max",
               destroy: "min",
             },
           },
           size: {
-            value: { min: 3, max: 7 },
+            value: 4,
+            random: {
+              enable: true,
+              minimumValue: 2,
+            },
           },
           life: {
             duration: {
+              sync: true,
               value: 5,
             },
             count: 1,
@@ -68,7 +70,10 @@ const Confetti = ({ isActive }: ConfettiProps) => {
               enable: true,
               acceleration: 10,
             },
-            speed: { min: 10, max: 20 },
+            speed: {
+              min: 10,
+              max: 20,
+            },
             decay: 0.1,
             direction: "none",
             straight: false,
@@ -83,43 +88,59 @@ const Confetti = ({ isActive }: ConfettiProps) => {
               max: 360,
             },
             direction: "random",
+            move: true,
             animation: {
               enable: true,
-              speed: 30,
+              speed: 60,
             },
           },
           tilt: {
-            enable: true,
             direction: "random",
+            enable: true,
+            move: true,
             value: {
               min: 0,
               max: 360,
             },
             animation: {
               enable: true,
-              speed: 30,
+              speed: 60,
             },
           },
           roll: {
-            enable: true,
             darken: {
               enable: true,
               value: 25,
             },
+            enable: true,
+            speed: {
+              min: 15,
+              max: 25,
+            },
+          },
+          wobble: {
+            distance: 30,
+            enable: true,
+            move: true,
+            speed: {
+              min: -15,
+              max: 15,
+            },
           },
         },
         emitters: {
-          position: {
-            x: 50,
-            y: 20,
-          },
-          size: {
-            width: 100,
-            height: 0,
+          life: {
+            count: 0,
+            duration: 0.1,
+            delay: 0.4,
           },
           rate: {
-            delay: 0,
-            quantity: 50,
+            delay: 0.1,
+            quantity: 150,
+          },
+          size: {
+            width: 0,
+            height: 0,
           },
         },
       }}

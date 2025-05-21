@@ -1,74 +1,64 @@
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+import { Activity } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 
-interface ActivityItem {
+export type ActivityItem = {
   id: string;
   title: string;
   description: string;
   timestamp: string;
-  type: "update" | "achievement" | "alert" | "info";
-}
+  type: "alert" | "update" | "achievement" | "info";
+};
 
 interface ActivityFeedProps {
   items: ActivityItem[];
-  className?: string;
 }
 
-const ActivityFeed = ({ items, className }: ActivityFeedProps) => {
-  const getTypeStyles = (type: ActivityItem["type"]) => {
-    switch (type) {
-      case "update":
-        return "bg-dashboard-soft-blue";
-      case "achievement":
-        return "bg-dashboard-soft-green";
-      case "alert":
-        return "bg-dashboard-soft-orange";
-      case "info":
-        return "bg-dashboard-soft-purple";
-      default:
-        return "bg-dashboard-soft-blue";
-    }
-  };
-
+export default function ActivityFeed({ items }: ActivityFeedProps) {
   return (
-    <Card className={cn("animate-fade-in", className)}>
-      <CardHeader>
-        <CardTitle className="text-lg">Activity Feed</CardTitle>
-        <CardDescription>Your recent activity</CardDescription>
+    <Card className="h-full">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardTitle className="text-xl font-bold">Activity Feed</CardTitle>
+        <Activity className="h-5 w-5 text-muted-foreground" />
       </CardHeader>
-      <CardContent className="p-0">
-        <div className="space-y-0">
+      <CardContent>
+        <div className="space-y-8">
           {items.map((item) => (
-            <div
-              key={item.id}
-              className="flex items-start px-4 py-3 border-b last:border-0"
-            >
+            <div key={item.id} className="flex gap-4">
               <div
-                className={cn(
-                  "w-2 h-2 rounded-full mt-1.5 mr-3",
-                  getTypeStyles(item.type)
-                )}
+                className={`mt-0.5 h-2 w-2 rounded-full ${getActivityTypeColor(
+                  item.type
+                )}`}
               />
-              <div className="flex-1 space-y-0.5">
-                <p className="text-sm font-medium">{item.title}</p>
-                <p className="text-xs text-muted-foreground">
+              <div className="space-y-1">
+                <p className="text-sm font-medium leading-none">{item.title}</p>
+                <p className="text-sm text-muted-foreground">
                   {item.description}
                 </p>
-                <p className="text-xs text-muted-foreground">{item.timestamp}</p>
+                <p className="text-xs text-muted-foreground">
+                  {item.timestamp}
+                </p>
               </div>
+              <Separator className="my-4" />
             </div>
           ))}
         </div>
       </CardContent>
     </Card>
   );
-};
+}
 
-export default ActivityFeed;
+function getActivityTypeColor(type: ActivityItem["type"]) {
+  switch (type) {
+    case "alert":
+      return "bg-destructive";
+    case "update":
+      return "bg-blue-500";
+    case "achievement":
+      return "bg-green-500";
+    case "info":
+    default:
+      return "bg-muted-foreground";
+  }
+}
