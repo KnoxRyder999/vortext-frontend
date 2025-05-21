@@ -35,13 +35,16 @@ const HeroSection = ({ id, setActiveSection }: HeroSectionProps) => {
         <div className="absolute inset-0 bg-black/60 z-10"></div>
         <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black z-20"></div>
         <div className="absolute bottom-0 w-full h-24 bg-gradient-to-t from-black to-transparent z-20"></div>
-        <div
-          className="absolute inset-0 bg-cover bg-center z-0"
-          style={{
-            backgroundImage:
-              "url('https://cdn.pixabay.com/photo/2021/09/07/07/11/game-6603193_1280.jpg')",
-          }}
-        ></div>
+        <video
+          className="absolute z-10 inset-0 w-full h-full object-cover"
+          autoPlay
+          muted
+          loop
+          playsInline
+        >
+          <source src="https://drive.google.com/file/d/1tKBicxmruZCoez6KW6iTCsDvxFrpK9ON/view?usp=drive_link" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
       </div>
 
       <Confetti isActive={showConfetti} />
