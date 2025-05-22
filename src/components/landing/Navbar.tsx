@@ -77,7 +77,7 @@ const Navbar = ({ activeSection, setActiveSection }: NavbarProps) => {
             onClick={() => scrollToSection("contact")}
             className="bg-purple-600 hover:bg-purple-700 text-white"
           >
-            Discord
+            sign in
           </Button>
         </nav>
 
@@ -116,7 +116,7 @@ const Navbar = ({ activeSection, setActiveSection }: NavbarProps) => {
                 href="https://discord.gg//"
                 className="bg-purple-600 hover:bg-purple-700 text-white w-full"
               >
-                Discord
+                sign up
               </a>
             </nav>
           </div>
