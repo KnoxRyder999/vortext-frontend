@@ -1,72 +1,18 @@
-
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
-import ActivityFeed, { ActivityItem } from "@/components/dashboard/ActivityFeed";
+import ActivityFeed from "@/components/dashboard/ActivityFeed";
 import SimpleAreaChart from "@/components/dashboard/SimpleAreaChart";
 import StatCard from "@/components/dashboard/StatCard";
-import { 
-  ArrowUpRight, 
-  Users, 
-  CreditCard, 
-  LineChart, 
-  Activity 
+import { revenueData, usersData, activityItems } from "@/utils/constants";
+import {
+  ArrowUpRight,
+  Users,
+  CreditCard,
+  LineChart
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
 const Index = () => {
-  // Sample data for activity feed
-  const activityItems: ActivityItem[] = [
-    {
-      id: "1",
-      title: "Monthly target reached",
-      description: "You've hit your monthly revenue target",
-      timestamp: "Just now",
-      type: "achievement",
-    },
-    {
-      id: "2",
-      title: "New user sign up",
-      description: "John Smith joined your platform",
-      timestamp: "2 hours ago",
-      type: "update",
-    },
-    {
-      id: "3",
-      title: "Payment received",
-      description: "$299.00 from Business Pro subscription",
-      timestamp: "6 hours ago",
-      type: "info",
-    },
-    {
-      id: "4",
-      title: "Server maintenance",
-      description: "Scheduled maintenance in 24 hours",
-      timestamp: "1 day ago",
-      type: "alert",
-    },
-  ];
-
-  // Sample data for charts
-  const revenueData = [
-    { name: "Jan", value: 12400 },
-    { name: "Feb", value: 14000 },
-    { name: "Mar", value: 15600 },
-    { name: "Apr", value: 17400 },
-    { name: "May", value: 16800 },
-    { name: "Jun", value: 19200 },
-    { name: "Jul", value: 21600 },
-  ];
-
-  const usersData = [
-    { name: "Jan", value: 120 },
-    { name: "Feb", value: 160 },
-    { name: "Mar", value: 210 },
-    { name: "Apr", value: 290 },
-    { name: "May", value: 350 },
-    { name: "Jun", value: 430 },
-    { name: "Jul", value: 510 },
-  ];
-
   return (
     <DashboardLayout>
       <div className="mb-6">
@@ -74,7 +20,7 @@ const Index = () => {
           <Link to="/">Back to VortexBytes Landing Page</Link>
         </Button>
       </div>
-      
+
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
         <StatCard
           title="Total Revenue"
@@ -107,13 +53,13 @@ const Index = () => {
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7 mt-6">
-        <SimpleAreaChart 
-          title="Revenue" 
+        <SimpleAreaChart
+          title="Revenue"
           data={revenueData}
           className="md:col-span-4"
         />
-        <SimpleAreaChart 
-          title="User Growth" 
+        <SimpleAreaChart
+          title="User Growth"
           data={usersData}
           className="md:col-span-3"
         />
@@ -126,4 +72,4 @@ const Index = () => {
   );
 };
 
-export default Index;
+export default Index

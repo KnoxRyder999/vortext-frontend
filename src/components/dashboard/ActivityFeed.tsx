@@ -2,15 +2,7 @@
 import { Activity } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-
-export type ActivityItem = {
-  id: string;
-  title: string;
-  description: string;
-  timestamp: string;
-  type: "alert" | "update" | "achievement" | "info";
-};
-
+import { ActivityItem } from "@/utils/types";
 interface ActivityFeedProps {
   items: ActivityItem[];
 }
