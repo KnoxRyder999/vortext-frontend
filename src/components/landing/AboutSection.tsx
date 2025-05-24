@@ -9,22 +9,25 @@ interface AboutSectionProps {
 const AboutSection = ({ id }: AboutSectionProps) => {
   const teamMembers = [
     {
-      name: "Alex Carter",
+      name: "𝔇𝔞𝔯𝔨 𝔪𝔞𝔤𝔦𝔠",
+      name1: "Adam dean",
       role: "Lead Developer",
       skills: "Script Development, UI/UX Design",
-      image: "https://randomuser.me/api/portraits/men/32.jpg",
+      image: "magic.jpeg",
     },
     {
-      name: "Sam Reynolds",
+      name: "VortexBytes",
+      name1: "Fawaz Hassan",
       role: "3D Modeler",
       skills: "MLO Creation, Asset Design",
-      image: "https://randomuser.me/api/portraits/women/44.jpg",
+      image: "Fawaz.jpg",
     },
     {
-      name: "Jamie Wright",
+      name: "Axelknight",
+      name1: "Axelknight",
       role: "Server Specialist",
       skills: "Server Configuration, Performance Optimization",
-      image: "https://randomuser.me/api/portraits/men/67.jpg",
+      image: "./adam.jpg",
     },
   ];
 
@@ -116,11 +119,11 @@ const AboutSection = ({ id }: AboutSectionProps) => {
               key={index}
               className="bg-gray-800/50 border-purple-900/50 overflow-hidden"
             >
-              <div className="h-48 overflow-hidden">
+              <div className="h-58 overflow-hidden">
                 <img
                   src={member.image}
                   alt={member.name}
-                  className="w-full h-full object-cover object-center"
+                  className="w-full object-cover object-center"
                 />
               </div>
               <CardContent className="p-6">

@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import HeroSection from "@/components/landing/HeroSection";
 import AboutSection from "@/components/landing/AboutSection";
 import ServicesSection from "@/components/landing/ServicesSection";
@@ -12,11 +12,17 @@ import RegisterModal from "@/components/modal/RegisterModal";
 
 const Landing = () => {
   const [activeSection, setActiveSection] = useState("home");
+  useEffect(() => {
+    console.error(
+      "404 Error: User attempted to access non-existent route:",
+      location.pathname
+    );
+  }, [location.pathname]);
 
   return (
     <div className="min-h-screen bg-black text-white overflow-x-hidden">
       <Navbar activeSection={activeSection} setActiveSection={setActiveSection} />
-      <RegisterModal/>
+      <RegisterModal />
       <main>
         <HeroSection id="home" setActiveSection={setActiveSection} />
         <AboutSection id="about" />

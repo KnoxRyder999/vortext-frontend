@@ -105,7 +105,7 @@ const ContactSection = ({ id }: ContactSectionProps) => {
                     <div>
                       <h4 className="text-white font-medium mb-1">Discord</h4>
                       <p className="text-gray-300">VortexBytes#1234</p>
-                      <a href="#" className="text-purple-400 text-sm hover:underline">
+                      <a href="https://discord.gg/vortexbytes" className="text-purple-400 text-sm hover:underline">
                         Join Our Server
                       </a>
                     </div>
