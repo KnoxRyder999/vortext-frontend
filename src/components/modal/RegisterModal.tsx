@@ -1,13 +1,13 @@
 import React, { useState, ChangeEvent } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { closeModalSlice, showLoginModal, showModalSlice } from '@/store/userModalSlice'; // adjust path
+import { closeModalSlice, showModalSlice } from '@/store/userModalSlice'; // adjust path
 import { userApi } from '@/store/authSlice';
 
 const RegisterModal: React.FC = () => {
 
     const isRegister = useSelector(state => state['modal'].show1);
     const isLogin = useSelector(state => state['modal'].show2);
-
+    const { register, login } = userApi;
     const dispatch = useDispatch();
 
     const [userData, setUserData] = useState({
@@ -87,7 +87,7 @@ const RegisterModal: React.FC = () => {
                             </button>
                             <button
                                 className="px-4 py-2 bg-agree text-white w-[40%] rounded hover:bg-hover"
-                                onClick={() => userApi.register(userData)}
+                                onClick={() => dispatch(register(userData))}
                             >
                                 Register
                             </button>
@@ -95,8 +95,14 @@ const RegisterModal: React.FC = () => {
                     </div>
                     :
                     <div className="bg-primary p-12 border-[1px] flex flex-col gap-4 border-border rounded-xl w-full max-w-md shadow-lg relative">
-                        <div className="flex justify-center w-full">
-                            <h2 className="text-xl pt-5 font-semibold">Log In</h2>
+                        <div className="flex justify-between w-full">
+                            <h2 className="text-xl pt-4 pl-6 font-semibold">Log In</h2>
+                            <button
+                                className=" bg-[#080] text-white w-[40%] rounded hover:bg-[#0a0]"
+                                onClick={() => dispatch(showModalSlice())}
+                            >
+                                Register
+                            </button>
                         </div>
                         <input
                             type="email"
@@ -123,7 +129,7 @@ const RegisterModal: React.FC = () => {
                             </button>
                             <button
                                 className="px-4 py-2 bg-agree text-white w-[40%] rounded hover:bg-hover"
-                                onClick={() => userApi.login(userData)}
+                                onClick={() => dispatch(login(userData))}
                             >
                                 Log In
                             </button>

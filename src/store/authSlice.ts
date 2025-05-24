@@ -25,14 +25,16 @@ export interface CreateUserPayload {
 export const userApi = {
   getAll: () => api.get<User[]>('/users'),
   getById: (id: number) => api.get<User>(`/users/${id}`),
-  register: data => {
+  register: data => dispatch => {
     try {
       const formData = new FormData();
       for (let key in data) formData.append(key, data[key])
       api.post('/users/register', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
         .then(res => {
-          console.log(res);
           toast.success("Register successfully!")
+          localStorage.setItem('token', res['token'])
+          dispatch(login(res['user']))
+          dispatch(closeModalSlice())
         })
         .catch(err => {
           toast.error("err")
@@ -41,15 +43,17 @@ export const userApi = {
       console.log(e);
     }
   },
-  login: data => {
+  login: (data: CreateUserPayload) => async (dispatch) => {
     try {
       api.post('/users/login', data)
         .then(res => {
-          console.log(res);
+          localStorage.setItem('token', res['token'])
           toast.success("Logged in successfully!")
+          dispatch(login(res['user']))
+          dispatch(closeModalSlice())
         })
         .catch(err => {
-          toast.error("err")
+          toast.error(err.message)
         })
     } catch (e) {
       console.log(e);
@@ -86,6 +90,7 @@ export const slice = createSlice({
       state.user = action.payload;
     },
     logout: (state) => {
+      window.localStorage.removeItem('token')
       state.isLoggedIn = false;
       state.user = null;
     },

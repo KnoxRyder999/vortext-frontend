@@ -24,6 +24,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { toast } from "@/components/ui/sonner";
 import { Mail, MessageSquare, Send } from "lucide-react";
+import { useSelector } from "react-redux";
 
 interface ContactSectionProps {
   id: string;
@@ -43,7 +44,7 @@ type FormData = z.infer<typeof formSchema>;
 
 const ContactSection = ({ id }: ContactSectionProps) => {
   const [isLoading, setIsLoading] = useState(false);
-
+  const { isLoggedIn, user } = useSelector(store => store['auth'])
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -58,8 +59,11 @@ const ContactSection = ({ id }: ContactSectionProps) => {
   });
 
   const onSubmit = (data: FormData) => {
+    if(!isLoggedIn) {
+      alert("You should log in first!")
+      return
+    }
     setIsLoading(true);
-    
     // Simulate API call
     setTimeout(() => {
       console.log(data);
@@ -311,9 +315,10 @@ const ContactSection = ({ id }: ContactSectionProps) => {
                           Processing...
                         </span>
                       ) : (
-                        <span className="flex items-center">
+                        <button className="flex items-center"
+                        >
                           <Send className="mr-2 h-5 w-5" /> Send Message
-                        </span>
+                        </button>
                       )}
                     </Button>
                   </form>

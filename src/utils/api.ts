@@ -1,9 +1,12 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 
+const token = localStorage.getItem('token'); // get saved JWT
+
 const apiClient = axios.create({
   baseURL: 'http://localhost:3000/api', // Replace with your actual backend URL
   headers: {
     'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`
   },
 });
 
