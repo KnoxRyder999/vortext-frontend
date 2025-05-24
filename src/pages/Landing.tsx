@@ -8,6 +8,7 @@ import TestimonialsSection from "@/components/landing/TestimonialsSection";
 import ContactSection from "@/components/landing/ContactSection";
 import Footer from "@/components/landing/Footer";
 import Navbar from "@/components/landing/Navbar";
+import RegisterModal from "@/components/modal/RegisterModal";
 
 const Landing = () => {
   const [activeSection, setActiveSection] = useState("home");
@@ -15,6 +16,7 @@ const Landing = () => {
   return (
     <div className="min-h-screen bg-black text-white overflow-x-hidden">
       <Navbar activeSection={activeSection} setActiveSection={setActiveSection} />
+      <RegisterModal/>
       <main>
         <HeroSection id="home" setActiveSection={setActiveSection} />
         <AboutSection id="about" />

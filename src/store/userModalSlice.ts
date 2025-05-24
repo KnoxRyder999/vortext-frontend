@@ -1,32 +1,34 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initData = {
-    name: "",
-    email: "",
-    password: "",
-    img: "",
-    avatar: ""
-  }
+  name: "",
+  email: "",
+  password: "",
+  img: "",
+  avatar: ""
+}
 
-export const userModalSlice = createSlice({
-  name: 'userModal',
+export const slice = createSlice({
+  name: 'modal',
   initialState: {
-    show: false,
+    show1: false,
+    show2: false,
     data: initData
   },
   reducers: {
-    showModalSlice: (state, action) => {
-        state.show = true
-        state.data = initData
+    showModalSlice: (state) => {
+      state.show1 = true
     },
-    closeModalSlice: (state, action) => {
-        state.show = false
+    closeModalSlice: (state) => {
+      state.show1 = false
+      state.show2 = false
+      state.data = initData
     },
-    userDataSlice: (state, { payload }) => {
-        state.data = {...state.data, ...payload}
-    },
+    showLoginModal: (state) => {
+      state.show2 = true
+    }
   },
 });
 
-export const { showModalSlice, closeModalSlice, userDataSlice } = userModalSlice.actions;
-export default userModalSlice.reducer;
+export const { showModalSlice, closeModalSlice, showLoginModal } = slice.actions;
+export default slice.reducer;

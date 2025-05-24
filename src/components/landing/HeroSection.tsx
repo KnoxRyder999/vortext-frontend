@@ -74,7 +74,7 @@ const HeroSection = ({ id, setActiveSection }: HeroSectionProps) => {
             <Button
               onClick={() => scrollToSection("contact")}
               variant="outline"
-              className="border-purple-500 text-purple-500 hover:bg-purple-900/20 px-8 py-6 text-lg"
+              className="border-purple-500 bg-agree text-purple-500 hover:bg-hover px-8 py-6 text-lg"
             >
               Custom Work
             </Button>

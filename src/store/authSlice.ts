@@ -1,6 +1,80 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { api } from '@/utils/api';
+import { closeModalSlice } from './userModalSlice';
+import { toast } from 'sonner';
 
-export const authSlice = createSlice({
+export interface LogData {
+  email: string;
+  password: string;
+}
+
+export interface User {
+  id: number;
+  name: string;
+  email: string;
+  avatar?: string; // typically this will be a URL returned from the backend
+}
+
+export interface CreateUserPayload {
+  name: string;
+  email: string;
+  password: string;
+  avatar?: File | null;
+}
+
+export const userApi = {
+  getAll: () => api.get<User[]>('/users'),
+  getById: (id: number) => api.get<User>(`/users/${id}`),
+  register: data => {
+    try {
+      const formData = new FormData();
+      for (let key in data) formData.append(key, data[key])
+      api.post('/users/register', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
+        .then(res => {
+          console.log(res);
+          toast.success("Register successfully!")
+        })
+        .catch(err => {
+          toast.error("err")
+        })
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  login: data => {
+    try {
+      api.post('/users/login', data)
+        .then(res => {
+          console.log(res);
+          toast.success("Logged in successfully!")
+        })
+        .catch(err => {
+          toast.error("err")
+        })
+    } catch (e) {
+      console.log(e);
+    }
+  },
+  update: (id: number, data: Partial<CreateUserPayload>) => dispatch => {
+    const formData = new FormData();
+    if (data.name) formData.append('name', data.name);
+    if (data.email) formData.append('email', data.email);
+    if (data.password) formData.append('password', data.password);
+    if (data.avatar) formData.append('avatar', data.avatar);
+
+    dispatch(closeModalSlice());
+    return api.put<User>(`/users/${id}`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  },
+
+  delete: (id: number) => api.delete<void>(`/users/${id}`),
+};
+
+
+export const slice = createSlice({
   name: 'auth',
   initialState: {
     isLoggedIn: false,
@@ -18,5 +92,5 @@ export const authSlice = createSlice({
   },
 });
 
-export const { login, logout } = authSlice.actions;
-export default authSlice.reducer;
+export const { login, logout } = slice.actions;
+export default slice.reducer;
