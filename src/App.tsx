@@ -11,6 +11,7 @@ import { Provider } from 'react-redux';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { store } from '@/store';
+import ProjectEditor from "@/pages/ProjectEditor";
 
 const queryClient = new QueryClient();
 
@@ -25,7 +26,8 @@ const App = () => {
             <Routes>
               <Route path="/" element={<Landing />} />
               <Route path="/dashboard" element={<Index />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="/project" element={<ProjectEditor/>}/>
+              { /* ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
           </TooltipProvider>

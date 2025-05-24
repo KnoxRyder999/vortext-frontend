@@ -2,7 +2,9 @@
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Eye, Code, ArrowRight } from "lucide-react";
+import { Eye, Code, ArrowRight, Plus } from "lucide-react";
+import { useSelector } from "react-redux";
+import { useNavigate } from 'react-router-dom';
 
 interface PortfolioSectionProps {
   id: string;
@@ -10,16 +12,17 @@ interface PortfolioSectionProps {
 
 const PortfolioSection = ({ id }: PortfolioSectionProps) => {
   const [activeCategory, setActiveCategory] = useState("all");
-
+  const { isLoggedIn, user } = useSelector(store => store['auth'])
+  const navicate = useNavigate()
   const projects = [
     {
       id: 1,
       name: "VB Advanced Jobs System",
       description: "A comprehensive jobs system with unique progression mechanics and dynamic missions for roleplaying servers.",
-      tech: ["QBCore", "ESX Compatible", "Lua", "HTML/CSS/JS"],
+      skills: ["QBCore", "ESX Compatible", "Lua", "HTML/CSS/JS"],
       category: "scripts",
       client: "MidwestRP",
-      images: [
+      photos: [
         "vortex-logo.png",
         "vortex-logo.png",
       ],
@@ -28,10 +31,10 @@ const PortfolioSection = ({ id }: PortfolioSectionProps) => {
       id: 2,
       name: "Metro Police Department HQ",
       description: "Detailed MLO of a modern police headquarters with integrated features for law enforcement roleplay.",
-      tech: ["3D Modeling", "MLO", "Interior Design"],
+      skills: ["3D Modeling", "MLO", "Interior Design"],
       category: "mlo",
       client: "LosVentures RP",
-      images: [
+      photos: [
         "vortex-3.png",
         "vortex-3.png",
       ],
@@ -40,10 +43,10 @@ const PortfolioSection = ({ id }: PortfolioSectionProps) => {
       id: 3,
       name: "VB Phone System",
       description: "Modern smartphone interface with apps, messaging, social media, and business integrations.",
-      tech: ["HTML/CSS", "React", "Lua Integration", "Real-time Updates"],
+      skills: ["HTML/CSS", "React", "Lua Integration", "Real-time Updates"],
       category: "ui",
       client: "GrandState RP",
-      images: [
+      photos: [
         "monzo1.png",
         "monzo1.png",
       ],
@@ -52,20 +55,22 @@ const PortfolioSection = ({ id }: PortfolioSectionProps) => {
       id: 4,
       name: "Complete Server Setup",
       description: "Full server deployment with custom economy, jobs, and unique gameplay features.",
-      tech: ["QBCore", "Server Configuration", "Database Management", "Custom Scripts"],
+      skills: ["QBCore", "Server Configuration", "Database Management", "Custom Scripts"],
       category: "server",
       client: "NeonCity RP",
-      images: [
+      photos: [
         "vortex-5.png",
         "vortex-5.png",
       ],
     },
   ];
 
+  const projectList = useSelector(store => store['projects'].list)
+
   const filteredProjects =
     activeCategory === "all"
-      ? projects
-      : projects.filter((project) => project.category === activeCategory);
+      ? projectList
+      : projectList.filter((project) => project.category === activeCategory);
 
   return (
     <section
@@ -93,7 +98,7 @@ const PortfolioSection = ({ id }: PortfolioSectionProps) => {
                 className={
                   activeCategory === category
                     ? "bg-purple-600 hover:bg-purple-700"
-                    : "border-purple-600 text-purple-400 hover:bg-purple-900/20"
+                    : "border-purple-600 text-purple-400 hover:bg-[#16a]"
                 }
               >
                 {category.charAt(0).toUpperCase() + category.slice(1)}
@@ -106,13 +111,13 @@ const PortfolioSection = ({ id }: PortfolioSectionProps) => {
           {filteredProjects.map((project) => (
             <Card
               key={project.id}
-              className="bg-gray-800/50 border-purple-900/50 overflow-hidden"
+              className="bg-gray-800/50 border-[#16a] overflow-hidden"
             >
-              <div className="relative h-64 overflow-hidden">
+              <div className="relative h-auto overflow-hidden">
                 <img
-                  src={project.images[0]}
+                  src={project.photos[0]}
                   alt={project.name}
-                  className="w-full h-full object-cover object-center transition-transform duration-700 hover:scale-110"
+                  className="w-full h-[400px] object-cover object-center transition-transform duration-700 hover:scale-110"
                 />
                 <div className="absolute top-4 right-4 bg-purple-600 text-white text-xs px-2 py-1 rounded">
                   {project.category.toUpperCase()}
@@ -127,12 +132,12 @@ const PortfolioSection = ({ id }: PortfolioSectionProps) => {
                 </p>
                 <p className="text-gray-300 mb-4">{project.description}</p>
                 <div className="flex flex-wrap gap-2 mb-6">
-                  {project.tech.map((tech, idx) => (
+                  {project.skills.map((skill, idx) => (
                     <span
                       key={idx}
                       className="text-xs bg-gray-700 text-purple-300 px-2 py-1 rounded"
                     >
-                      {tech}
+                      {skill}
                     </span>
                   ))}
                 </div>
@@ -140,27 +145,46 @@ const PortfolioSection = ({ id }: PortfolioSectionProps) => {
                   <Button
                     variant="outline"
                     size="sm"
-                    className="border-purple-600 text-purple-400 hover:bg-purple-900/20"
+                    className="border-purple-600 text-purple-400 hover:bg-[#16a]"
                   >
                     <Eye className="mr-2 h-4 w-4" /> View Demo
                   </Button>
                   <Button
                     variant="outline"
                     size="sm"
-                    className="border-blue-600 text-blue-400 hover:bg-blue-900/20"
+                    className="border-blue-600 text-blue-400 hover:bg-[#293]"
                   >
                     <Code className="mr-2 h-4 w-4" /> Technical Details
                   </Button>
+                  { isLoggedIn &&
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => navicate('/project')}
+                      className="border-blue-600 text-blue-400 bg-primary hover:bg-[#293]"
+                    >
+                      <Code className="mr-2 h-4 w-4" /> Setting
+                    </Button>
+                  }
                 </div>
               </CardContent>
             </Card>
           ))}
         </div>
 
-        <div className="text-center mt-12">
+        <div className="text-center mt-12 flex w-full justify-between">
           <Button className="bg-purple-600 hover:bg-purple-700">
             View All Projects <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
+          {
+            isLoggedIn && <Button
+              variant="outline"
+              size="sm"
+              className="border-purple-600 text-purple-400 hover:bg-[#16a]"
+            >
+              <Plus className="mr-2 h-4 w-4" /> View Demo
+            </Button>
+          }
         </div>
       </div>
     </section>

@@ -71,17 +71,32 @@ export const projectActions = {
 interface ProjectState {
   list: Project[];
   current: Project | null;
+  flag: string,
+  selected: number,
+  showModal: boolean
 }
 
 const initialState: ProjectState = {
   list: [],
   current: null,
+  flag: "add",
+  selected: 0,
+  showModal: false
 };
 
 const projectSlice = createSlice({
   name: 'projects',
   initialState,
   reducers: {
+    showProjetModal: (state, { payload }) => {
+      const { flag, selected } = payload
+      state.selected = selected
+      state.flag = flag
+      state.showModal = true
+    },
+    closeProjetModal: (state, { payload }) => {
+      state.showModal = false
+    },
     setProjects: (state, action: PayloadAction<Project[]>) => {
       state.list = action.payload;
     },
@@ -120,6 +135,8 @@ export const {
   updateProject,
   deleteProject,
   clearCurrentProject,
+  showProjetModal,
+  closeProjetModal
 } = projectSlice.actions;
 
 export default projectSlice.reducer;

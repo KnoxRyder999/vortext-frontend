@@ -9,15 +9,16 @@ import ContactSection from "@/components/landing/ContactSection";
 import Footer from "@/components/landing/Footer";
 import Navbar from "@/components/landing/Navbar";
 import RegisterModal from "@/components/modal/RegisterModal";
+import { projectActions } from "@/store/projectSlice";
+import { useDispatch } from "react-redux";
 
 const Landing = () => {
   const [activeSection, setActiveSection] = useState("home");
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    console.error(
-      "404 Error: User attempted to access non-existent route:",
-      location.pathname
-    );
-  }, [location.pathname]);
+    dispatch(projectActions['getAll']())
+  }, []);
 
   return (
     <div className="min-h-screen bg-black text-white overflow-x-hidden">
