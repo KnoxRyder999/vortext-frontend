@@ -3,8 +3,9 @@ import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Eye, Code, ArrowRight, Plus } from "lucide-react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from 'react-router-dom';
+import { closeProjetPage, editProjetPage } from "@/store/projectSlice";
 
 interface PortfolioSectionProps {
   id: string;
@@ -14,56 +15,7 @@ const PortfolioSection = ({ id }: PortfolioSectionProps) => {
   const [activeCategory, setActiveCategory] = useState("all");
   const { isLoggedIn, user } = useSelector(store => store['auth'])
   const navicate = useNavigate()
-  const projects = [
-    {
-      id: 1,
-      name: "VB Advanced Jobs System",
-      description: "A comprehensive jobs system with unique progression mechanics and dynamic missions for roleplaying servers.",
-      skills: ["QBCore", "ESX Compatible", "Lua", "HTML/CSS/JS"],
-      category: "scripts",
-      client: "MidwestRP",
-      photos: [
-        "vortex-logo.png",
-        "vortex-logo.png",
-      ],
-    },
-    {
-      id: 2,
-      name: "Metro Police Department HQ",
-      description: "Detailed MLO of a modern police headquarters with integrated features for law enforcement roleplay.",
-      skills: ["3D Modeling", "MLO", "Interior Design"],
-      category: "mlo",
-      client: "LosVentures RP",
-      photos: [
-        "vortex-3.png",
-        "vortex-3.png",
-      ],
-    },
-    {
-      id: 3,
-      name: "VB Phone System",
-      description: "Modern smartphone interface with apps, messaging, social media, and business integrations.",
-      skills: ["HTML/CSS", "React", "Lua Integration", "Real-time Updates"],
-      category: "ui",
-      client: "GrandState RP",
-      photos: [
-        "monzo1.png",
-        "monzo1.png",
-      ],
-    },
-    {
-      id: 4,
-      name: "Complete Server Setup",
-      description: "Full server deployment with custom economy, jobs, and unique gameplay features.",
-      skills: ["QBCore", "Server Configuration", "Database Management", "Custom Scripts"],
-      category: "server",
-      client: "NeonCity RP",
-      photos: [
-        "vortex-5.png",
-        "vortex-5.png",
-      ],
-    },
-  ];
+  const dispatch = useDispatch()
 
   const projectList = useSelector(store => store['projects'].list)
 
@@ -71,7 +23,14 @@ const PortfolioSection = ({ id }: PortfolioSectionProps) => {
     activeCategory === "all"
       ? projectList
       : projectList.filter((project) => project.category === activeCategory);
-
+  const settingHandler = (id) => {
+    dispatch(editProjetPage(id))
+    navicate('/project/' + id)
+  }
+  const createProductHandler = () => {
+    dispatch(closeProjetPage())
+    navicate('/project')
+  }
   return (
     <section
       id={id}
@@ -160,7 +119,7 @@ const PortfolioSection = ({ id }: PortfolioSectionProps) => {
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => navicate('/project')}
+                      onClick={() => settingHandler(project.id)}
                       className="border-blue-600 text-blue-400 bg-primary hover:bg-[#293]"
                     >
                       <Code className="mr-2 h-4 w-4" /> Setting
@@ -180,9 +139,10 @@ const PortfolioSection = ({ id }: PortfolioSectionProps) => {
             isLoggedIn && <Button
               variant="outline"
               size="sm"
-              className="border-purple-600 text-purple-400 hover:bg-[#16a]"
+              onClick={createProductHandler}
+              className="border-purple-600 text-[#ff0] hover:bg-[#16a] bg-[#0c0]"
             >
-              <Plus className="mr-2 h-4 w-4" /> View Demo
+              <Plus className="mr-2 h-4 w-4" /> Add Portfolio
             </Button>
           }
         </div>

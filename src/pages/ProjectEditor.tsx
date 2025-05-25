@@ -1,32 +1,35 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
-// import { projectActions } from '../store/projectSlice'; // adjust path as needed
+import { useDispatch, useSelector } from 'react-redux';
+import { closeProjetPage, projectActions } from '@/store/projectSlice';
+import { Close } from '@radix-ui/react-toast';
 
 const defaultProject = {
   name: '',
   description: '',
   category: '',
   client: '',
-  clientPublic: 0,
-  skills: '',
+  clientPublic: true,
+  skills: [],
   photos: [],
   video: null,
 };
 
-const ProjectEditor = ({ isEditing = false, existingData = null }) => {
-  const [data, setData] = useState(existingData || defaultProject);
-  const [previewPhotos, setPreviewPhotos] = useState<string[]>([]);
-  const [previewVideo, setPreviewVideo] = useState<string | null>(null);
+const ProjectEditor = () => {
+  const { list, current, editFlag, selected } = useSelector(store => store['projects'])
+  const [data, setData] = useState(editFlag && list.find(it => it.id === selected) || defaultProject);
+  const [previewPhotos, setPreviewPhotos] = useState<string[]>(data.photos || []);
+  const [previewVideo, setPreviewVideo] = useState<string | null>(data.video || []);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { id } = useParams();
+  const skillbox = useRef();
 
   const handleChange = (field: string, value: any) => {
     if (field === 'photos') {
-      setData(prev => ({ ...prev, photos: value }));
-      const photoURLs = value.map((file: File) => URL.createObjectURL(file));
+      setData(prev => ({ ...prev, photos: value}));
+      const photoURLs = value.map((file: File) => URL.createObjectURL(file))
       setPreviewPhotos(photoURLs);
     } else if (field === 'video') {
       setData(prev => ({ ...prev, video: value }));
@@ -37,63 +40,60 @@ const ProjectEditor = ({ isEditing = false, existingData = null }) => {
     }
   };
 
+  const deletePhoto = idx => {
+    setData(prev => ({ ...prev, photos: prev.photos.filter((it, id) => id !== idx) }));
+    setPreviewPhotos(items => items.filter((it, id) => id !== idx));
+  }
+
   const handleSave = async () => {
-    const formData = new FormData();
-    formData.append('name', data.name);
-    formData.append('description', data.description);
-    formData.append('category', data.category);
-    formData.append('client', data.client);
-    formData.append('clientPublic', String(data.clientPublic));
-    formData.append('skills', data.skills);
+    if (!data.name) {
+      alert("Name should be included.")
+      return
+    } else {
+      if(editFlag) {
 
-    data.photos.forEach((file: File) => {
-      formData.append('photos', file);
-    });
-
-    if (data.video) {
-      formData.append('video', data.video);
+      } else {
+        dispatch(projectActions.create(data))
+      }
     }
-
-    // if (isEditing) {
-    //   await dispatch(projectActions.updateMultipart(Number(id), formData));
-    // } else {
-    //   await dispatch(projectActions.createMultipart(formData));
-    // }
-
-    navigate('/projects');
   };
 
+  const cancelHandler = () => {
+    dispatch(closeProjetPage())
+    navigate('/')
+  }
+
   return (
-    <div className="flex w-full bg-primary min-h-[100vh]">
-      <div className="max-w-2xl mx-auto mt-10 p-6 bg-white max-w-[600px] w-full shadow-md rounded-md">
-        <h2 className="text-2xl font-bold mb-6 text-gray-800"> 
-          {isEditing ? 'Edit Project' : 'New Project'}
+    <div className="flex w-full  bg-gradient-to-b from-black to-gray-600 min-h-[100vh]">
+      <div className="max-w-2xl mx-auto mt-10 p-6 bg-gray-800/50 hover:bg-gray-800/80 border-purple-900/50 border-[2px] text-[white] max-w-[600px] w-full shadow-md rounded-md">
+        <h2 className="text-4xl text-center font-bold mb-6 text-white">
+          {editFlag ? "Edit " : 'Create A New '}Portfolio
         </h2>
 
         <div className="space-y-5">
           <div>
-            <label className="block mb-1 font-medium text-gray-700">Name</label>
+            <label className="block mb-1 font-medium text-gray-300">Name</label>
             <input
-              className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={data.name} required
+              className="bg-[#334] w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              defaultValue={data.name} required
               onChange={(e) => handleChange('name', e.target.value)}
             />
           </div>
 
           <div>
-            <label className="block mb-1 font-medium text-gray-700">Description</label>
+            <label className="block mb-1 font-medium text-gray-300">Description</label>
             <textarea
-              className="w-full border border-gray-300 rounded px-4 py-2 h-24 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={data.description}
+              className="w-full bg-[#334] border border-gray-300 rounded px-4 py-2 h-24 resize-none focus:outline-none focus:ring-2 focus:ring-blue-500"
+              defaultValue={data.description}
               onChange={(e) => handleChange('description', e.target.value)}
             />
           </div>
 
           <div>
-            <label className="block mb-1 font-medium text-gray-700">Category</label>
+            <label className="block mb-1 font-medium text-gray-300">Category</label>
             <select
-              className="w-full border border-gray-300 rounded px-4 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={data.category}
+              className="w-full bg-[#334] border border-gray-300 rounded px-4 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              defaultValue={data.category}
               onChange={(e) => handleChange('category', e.target.value)}
             >
               <option value="">Select category</option>
@@ -105,10 +105,10 @@ const ProjectEditor = ({ isEditing = false, existingData = null }) => {
           </div>
 
           <div>
-            <label className="block mb-1 font-medium text-gray-700">Client</label>
+            <label className="block mb-1 font-medium text-gray-300">Client</label>
             <input
-              className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={data.client}
+              className="w-full bg-[#334] border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              defaultValue={data.client}
               onChange={(e) => handleChange('client', e.target.value)}
             />
           </div>
@@ -121,29 +121,44 @@ const ProjectEditor = ({ isEditing = false, existingData = null }) => {
               className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
               id="clientPublic"
             />
-            <label htmlFor="clientPublic" className="text-sm text-gray-700">
+            <label htmlFor="clientPublic" className="text-sm text-gray-300">
               Publicly show client name
             </label>
           </div>
 
           <div>
-            <label className="block mb-1 font-medium text-gray-700">Skills (comma-separated)</label>
-            <input
-              className="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-              value={data.skills}
-              onChange={(e) => handleChange('skills', e.target.value)}
-            />
+            <label className="block mb-1 font-medium text-gray-300">Skills (comma-separated)</label>
+            <div className="flex flex-wrap w-full gap-4 text-white">
+              {
+                data.skills.map((item, idx) =>
+                  <div className="flex">
+                    <div className="flex bg-primary py-1 rounded-full px-4"> {item}
+                    </div>
+                    <span className='rounded-full text-[10px] pt-2 bg-[#830] px-3 py-1 hover:scale-[1.2] transition-transform cursor-pointer duration-[0.5s] text-[#ff0] text-bolder'
+                    onClick={e => { handleChange('skills', data.skills.filter((it, i) => i !== idx )) }}
+                    >X</span>
+                  </div>
+                )
+              }
+              <div className="flex w-full gap-10">
+                <input className="bg-[#334] w-full border border-gray-300 rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500" ref={skillbox} />
+                <button className="flex bg-[#090] rounded-[5px] px-4 pt-1"
+                  onClick={e => { handleChange('skills', data.skills.concat(skillbox.current.value)) }}
+                > Add </button>
+              </div>
+
+            </div>
           </div>
 
           {/* Photo Upload */}
           <div>
-            <label className="block mb-1 font-medium text-gray-700">Upload Photos</label>
+            <label className="block mb-1 font-medium text-gray-300">Upload Photos</label>
             <input
               type="file"
               accept="image/*"
               multiple
               onChange={(e) => handleChange('photos', Array.from(e.target.files || []))}
-              className="block w-full text-sm text-gray-700 border border-gray-300 rounded cursor-pointer focus:outline-none"
+              className="block w-full text-sm text-gray-300 border border-gray-300 rounded cursor-pointer focus:outline-none"
             />
           </div>
 
@@ -151,24 +166,29 @@ const ProjectEditor = ({ isEditing = false, existingData = null }) => {
           {previewPhotos.length > 0 && (
             <div className="mt-3 grid grid-cols-3 gap-3">
               {previewPhotos.map((url, idx) => (
-                <img
-                  key={idx}
-                  src={url}
-                  alt={`Preview ${idx + 1}`}
-                  className="w-full h-32 object-cover rounded border"
-                />
+                <div className="relative">
+                  <div className="absolute w-full h-full flex justify-center items-center">
+                    <span className='text-[30px] hover:scale-[4] transition-transform cursor-pointer duration-[0.5s] text-[#ff0] text-bolder' onClick={() => deletePhoto(idx)}>X</span>
+                  </div>
+                  <img
+                    key={idx}
+                    src={url}
+                    alt={`Preview ${idx + 1}`}
+                    className="w-full h-32 object-cover rounded border"
+                  />
+                </div>
               ))}
             </div>
           )}
 
           {/* Video Upload */}
           <div>
-            <label className="block mb-1 font-medium text-gray-700">Upload Video</label>
+            <label className="block mb-1 font-medium text-gray-300">Upload Video</label>
             <input
               type="file"
               accept="video/*"
               onChange={(e) => handleChange('video', e.target.files?.[0] || null)}
-              className="block w-full text-sm text-gray-700 border border-gray-300 rounded cursor-pointer focus:outline-none"
+              className="block w-full text-sm text-gray-300 border border-gray-300 rounded cursor-pointer focus:outline-none"
             />
           </div>
 
@@ -187,11 +207,10 @@ const ProjectEditor = ({ isEditing = false, existingData = null }) => {
             <button
               onClick={handleSave}
               className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded"
-            >
-              {isEditing ? 'Update' : 'Create'} Project
+            > {editFlag ? "Edit" : "Create a New"} Project
             </button>
             <button
-              onClick={() => navigate('/')}
+              onClick={cancelHandler}
               className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold px-5 py-2 rounded"
             >
               Cancel

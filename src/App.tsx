@@ -27,6 +27,7 @@ const App = () => {
               <Route path="/" element={<Landing />} />
               <Route path="/dashboard" element={<Index />} />
               <Route path="/project" element={<ProjectEditor/>}/>
+              <Route path="/project/:id" element={<ProjectEditor/>}/>
               { /* ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

@@ -315,10 +315,10 @@ const ContactSection = ({ id }: ContactSectionProps) => {
                           Processing...
                         </span>
                       ) : (
-                        <button className="flex items-center"
+                        <span className="flex items-center"
                         >
                           <Send className="mr-2 h-5 w-5" /> Send Message
-                        </button>
+                        </span>
                       )}
                     </Button>
                   </form>

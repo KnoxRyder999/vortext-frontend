@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
 import { api } from '@/utils/api';
+import { boolean } from 'zod';
 
 export interface Project {
   id: number;
@@ -11,6 +12,7 @@ export interface Project {
   skills: string[];
   photos: string[];
   video?: string;
+  clientPublic: boolean;
 }
 
 export const projectActions = {
@@ -34,11 +36,25 @@ export const projectActions = {
     }
   },
 
-  create: (data: Partial<Project>) => async (dispatch) => {
+  create: data => async (dispatch) => {
     try {
-      const res = await api.post<Project>('/projects', data);
-      dispatch(addProject(res));
-      toast.success('Project created');
+      console.log(data);
+
+      let formData = new FormData();
+      for(let key in data) {
+        if(key === 'photos') {
+          if(data[key].length > 0) {
+            for(let p of data[key]) formData.append('photos', p)
+          }
+        } else formData.append(key, data[key]);
+      }
+      console.log(formData);
+      
+      api.post('/projects', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
+      .then(res => {
+        console.log(res);
+        toast.success('Project created');
+      })
     } catch (err) {
       toast.error('Failed to create project');
       console.error(err);
@@ -71,31 +87,28 @@ export const projectActions = {
 interface ProjectState {
   list: Project[];
   current: Project | null;
-  flag: string,
-  selected: number,
-  showModal: boolean
+  editFlag: boolean,
+  selected: number
 }
 
 const initialState: ProjectState = {
   list: [],
   current: null,
-  flag: "add",
+  editFlag: false,
   selected: 0,
-  showModal: false
 };
 
 const projectSlice = createSlice({
   name: 'projects',
   initialState,
   reducers: {
-    showProjetModal: (state, { payload }) => {
-      const { flag, selected } = payload
-      state.selected = selected
-      state.flag = flag
-      state.showModal = true
+    editProjetPage: (state, { payload }) => {
+      state.selected = payload
+      state.editFlag = true
     },
-    closeProjetModal: (state, { payload }) => {
-      state.showModal = false
+    closeProjetPage: (state) => {
+      state.editFlag = false
+      state.selected = 0
     },
     setProjects: (state, action: PayloadAction<Project[]>) => {
       state.list = action.payload;
@@ -135,8 +148,8 @@ export const {
   updateProject,
   deleteProject,
   clearCurrentProject,
-  showProjetModal,
-  closeProjetModal
+  closeProjetPage,
+  editProjetPage
 } = projectSlice.actions;
 
 export default projectSlice.reducer;
