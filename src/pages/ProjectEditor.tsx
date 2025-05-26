@@ -26,9 +26,14 @@ const ProjectEditor = () => {
   const { id } = useParams();
   const skillbox = useRef();
 
+  useEffect(() => {
+    console.log(previewPhotos);
+
+  }, [])
+
   const handleChange = (field: string, value: any) => {
     if (field === 'photos') {
-      setData(prev => ({ ...prev, photos: value}));
+      setData(prev => ({ ...prev, photos: value }));
       const photoURLs = value.map((file: File) => URL.createObjectURL(file))
       setPreviewPhotos(photoURLs);
     } else if (field === 'video') {
@@ -50,10 +55,20 @@ const ProjectEditor = () => {
       alert("Name should be included.")
       return
     } else {
-      if(editFlag) {
-
+      let formData = new FormData();
+      for (let key in data) {
+        if (key === 'photos') {
+          if (data[key].length > 0) {
+            for (let p of data[key]) formData.append('photos', p)
+          }
+        } else formData.append(key, data[key]);
+      }
+      if (editFlag) {
+        dispatch(projectActions.update(selected, formData))
+        .then(res => navigate('/'))
       } else {
-        dispatch(projectActions.create(data))
+        dispatch(projectActions.create(formData))
+        .then(res => navigate('/'))
       }
     }
   };
@@ -131,11 +146,11 @@ const ProjectEditor = () => {
             <div className="flex flex-wrap w-full gap-4 text-white">
               {
                 data.skills.map((item, idx) =>
-                  <div className="flex">
+                  <div className="flex" key={idx + "skill"}>
                     <div className="flex bg-primary py-1 rounded-full px-4"> {item}
                     </div>
                     <span className='rounded-full text-[10px] pt-2 bg-[#830] px-3 py-1 hover:scale-[1.2] transition-transform cursor-pointer duration-[0.5s] text-[#ff0] text-bolder'
-                    onClick={e => { handleChange('skills', data.skills.filter((it, i) => i !== idx )) }}
+                      onClick={e => { handleChange('skills', data.skills.filter((it, i) => i !== idx)) }}
                     >X</span>
                   </div>
                 )
@@ -166,7 +181,7 @@ const ProjectEditor = () => {
           {previewPhotos.length > 0 && (
             <div className="mt-3 grid grid-cols-3 gap-3">
               {previewPhotos.map((url, idx) => (
-                <div className="relative">
+                <div className="relative" key={idx + "photos"}>
                   <div className="absolute w-full h-full flex justify-center items-center">
                     <span className='text-[30px] hover:scale-[4] transition-transform cursor-pointer duration-[0.5s] text-[#ff0] text-bolder' onClick={() => deletePhoto(idx)}>X</span>
                   </div>

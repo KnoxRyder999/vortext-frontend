@@ -73,11 +73,22 @@ const PortfolioSection = ({ id }: PortfolioSectionProps) => {
               className="bg-gray-800/50 border-[#16a] overflow-hidden"
             >
               <div className="relative h-auto overflow-hidden">
-                <img
-                  src={project.photos[0]}
-                  alt={project.name}
-                  className="w-full h-[400px] object-cover object-center transition-transform duration-700 hover:scale-110"
-                />
+                {
+                  project.video ?
+                    <video
+                      src={project.video}
+                      controls
+                      autoPlay
+                      loop
+                      className="w-full rounded shadow border"
+                    />
+                    :
+                    <img
+                      src={project.photos[0]}
+                      alt={project.name}
+                      className="w-full h-[400px] object-cover object-center transition-transform duration-700 hover:scale-110"
+                    />
+                }
                 <div className="absolute top-4 right-4 bg-purple-600 text-white text-xs px-2 py-1 rounded">
                   {project.category.toUpperCase()}
                 </div>
@@ -115,7 +126,7 @@ const PortfolioSection = ({ id }: PortfolioSectionProps) => {
                   >
                     <Code className="mr-2 h-4 w-4" /> Technical Details
                   </Button>
-                  { isLoggedIn &&
+                  {isLoggedIn &&
                     <Button
                       variant="outline"
                       size="sm"

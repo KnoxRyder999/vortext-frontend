@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
 import { api } from '@/utils/api';
 import { boolean } from 'zod';
+import { useNavigate } from 'react-router-dom';
 
 export interface Project {
   id: number;
@@ -36,41 +37,35 @@ export const projectActions = {
     }
   },
 
-  create: data => async (dispatch) => {
+  create: data => async (dispatch) => new Promise((resolve, reject) => {
     try {
-      console.log(data);
-
-      let formData = new FormData();
-      for(let key in data) {
-        if(key === 'photos') {
-          if(data[key].length > 0) {
-            for(let p of data[key]) formData.append('photos', p)
-          }
-        } else formData.append(key, data[key]);
-      }
-      console.log(formData);
-      
-      api.post('/projects', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
-      .then(res => {
-        console.log(res);
-        toast.success('Project created');
-      })
+      api.post('/projects', data, { headers: { 'Content-Type': 'multipart/form-data' } })
+        .then((res: Project) => {
+          toast.success('Project created');
+          dispatch(addProject(res));
+          resolve("");
+        })
     } catch (err) {
       toast.error('Failed to create project');
       console.error(err);
+      reject("")
     }
-  },
+  }),
 
-  update: (id: number, data: Partial<Project>) => async (dispatch) => {
-    try {
-      const res = await api.put<Project>(`/projects/${id}`, data);
-      dispatch(updateProject(res));
-      toast.success('Project updated');
-    } catch (err) {
-      toast.error('Failed to update project');
-      console.error(err);
-    }
-  },
+  update: (id: number, data: FormData) => async (dispatch) => new Promise((resolve, reject) => {
+      try {
+        api.put('/projects/' + id, data, { headers: { 'Content-Type': 'multipart/form-data' } })
+          .then((res: Project) => {
+            toast.success('Project created');
+            dispatch(addProject(res));
+            resolve("");
+          })
+      } catch (err) {
+        toast.error('Failed to create project');
+        console.error(err);
+        reject("")
+      }
+  }),
 
   remove: (id: number) => async (dispatch) => {
     try {
