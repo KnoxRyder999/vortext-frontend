@@ -12,6 +12,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { store } from '@/store';
 import ProjectEditor from "@/pages/ProjectEditor";
+import Demo from "./pages/Demo";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +29,7 @@ const App = () => {
               <Route path="/dashboard" element={<Index />} />
               <Route path="/project" element={<ProjectEditor/>}/>
               <Route path="/project/:id" element={<ProjectEditor/>}/>
+              <Route path="/demo/:id" element={<Demo/>}/>
               { /* ROUTE */}
               {/* <Route path="*" element={<NotFound />} /> */}
               <Route path="*" element={<Navigate to="/" />} />

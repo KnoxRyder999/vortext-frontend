@@ -67,7 +67,7 @@ const PortfolioSection = ({ id }: PortfolioSectionProps) => {
         </div>
 
         <div className="grid md:grid-cols-2 gap-8">
-          {filteredProjects.map((project) => (
+          {filteredProjects.map((project, idx) => (
             <Card
               key={project.id}
               className="bg-gray-800/50 border-[#16a] overflow-hidden"
@@ -98,7 +98,7 @@ const PortfolioSection = ({ id }: PortfolioSectionProps) => {
                   {project.name}
                 </h3>
                 <p className="text-gray-400 text-sm mb-2">
-                  Client: {project.client}
+                  Client: { project.clientPublic? project.client: "Private"}
                 </p>
                 <p className="text-gray-300 mb-4">{project.description}</p>
                 <div className="flex flex-wrap gap-2 mb-6">
@@ -115,6 +115,7 @@ const PortfolioSection = ({ id }: PortfolioSectionProps) => {
                   <Button
                     variant="outline"
                     size="sm"
+                    onClick={() => navicate('/demo/' + idx)}
                     className="border-purple-600 text-purple-400 hover:bg-[#16a]"
                   >
                     <Eye className="mr-2 h-4 w-4" /> View Demo

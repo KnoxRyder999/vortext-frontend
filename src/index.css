@@ -99,3 +99,9 @@
     @apply bg-background text-foreground;
   }
 }
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
