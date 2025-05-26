@@ -48,7 +48,7 @@ const Demo = () => {
                         className="w-full rounded shadow border"
                     />
                 </div>
-                <div className="flex flex-wrap gap-10 w-full bg-gradient-to-r from-gray-900 to-gray-700 p-3 border-[#526] border-[1px] rounded-[10px]">
+                <div className="flex flex-wrap gap-5 w-full bg-gradient-to-r from-gray-900 to-gray-700 p-5 border-[#526] border-[1px] rounded-[10px]">
                     {
                         demo.photos.map((item, idx) => 
                             <img

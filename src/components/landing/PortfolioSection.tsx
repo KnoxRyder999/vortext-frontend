@@ -2,10 +2,10 @@
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Eye, Code, ArrowRight, Plus } from "lucide-react";
+import { Eye, Code, ArrowRight, Plus, Trash } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from 'react-router-dom';
-import { closeProjetPage, editProjetPage } from "@/store/projectSlice";
+import { closeProjetPage, editProjetPage, projectActions } from "@/store/projectSlice";
 
 interface PortfolioSectionProps {
   id: string;
@@ -30,6 +30,10 @@ const PortfolioSection = ({ id }: PortfolioSectionProps) => {
   const createProductHandler = () => {
     dispatch(closeProjetPage())
     navicate('/project')
+  }
+  const onDelete = (id) => {
+    if(confirm("Are you really going to delete?"))
+      dispatch(projectActions.remove(id))
   }
   return (
     <section
@@ -135,6 +139,16 @@ const PortfolioSection = ({ id }: PortfolioSectionProps) => {
                       className="border-blue-600 text-blue-400 bg-primary hover:bg-[#293]"
                     >
                       <Code className="mr-2 h-4 w-4" /> Setting
+                    </Button>
+                  }
+                  {isLoggedIn &&
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => onDelete(project.id)}
+                      className="border-red-600 text-red-400 bg-primary hover:bg-[#a33]"
+                    >
+                      <Trash className="mr-2 h-4 w-4" /> Delete
                     </Button>
                   }
                 </div>

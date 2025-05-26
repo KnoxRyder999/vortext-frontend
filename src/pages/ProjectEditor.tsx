@@ -16,6 +16,7 @@ const defaultProject = {
 };
 
 const ProjectEditor = () => {
+  const { user, isLoggedIn } = useSelector(store => store['auth'])
   const { list, current, editFlag, selected } = useSelector(store => store['projects'])
   const [data, setData] = useState(editFlag && list.find(it => it.id === selected) || defaultProject);
   const [previewPhotos, setPreviewPhotos] = useState<string[]>(data.photos || []);
@@ -25,11 +26,6 @@ const ProjectEditor = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
   const skillbox = useRef();
-
-  useEffect(() => {
-    console.log(previewPhotos);
-
-  }, [])
 
   const handleChange = (field: string, value: any) => {
     if (field === 'photos') {
@@ -65,10 +61,10 @@ const ProjectEditor = () => {
       }
       if (editFlag) {
         dispatch(projectActions.update(selected, formData))
-        .then(res => navigate('/'))
+          .then(res => navigate('/'))
       } else {
         dispatch(projectActions.create(formData))
-        .then(res => navigate('/'))
+          .then(res => navigate('/'))
       }
     }
   };
@@ -78,7 +74,7 @@ const ProjectEditor = () => {
     navigate('/')
   }
 
-  return (
+  return ( isLoggedIn &&
     <div className="flex w-full  bg-gradient-to-b from-black to-gray-600 min-h-[100vh]">
       <div className="max-w-2xl mx-auto mt-10 p-6 bg-gray-800/50 hover:bg-gray-800/80 border-purple-900/50 border-[2px] text-[white] max-w-[600px] w-full shadow-md rounded-md">
         <h2 className="text-4xl text-center font-bold mb-6 text-white">
@@ -107,7 +103,7 @@ const ProjectEditor = () => {
           <div>
             <label className="block mb-1 font-medium text-gray-300">Category</label>
             <select
-              className="w-full bg-[#334] border border-gray-300 rounded px-4 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full bg-[#334] text-[#777] border border-gray-300 rounded px-4 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
               defaultValue={data.category}
               onChange={(e) => handleChange('category', e.target.value)}
             >
