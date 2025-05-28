@@ -131,7 +131,7 @@ const PortfolioSection = ({ id }: PortfolioSectionProps) => {
                   >
                     <Code className="mr-2 h-4 w-4" /> Technical Details
                   </Button>
-                  {isLoggedIn &&
+                  {isLoggedIn && user.isAdmin &&
                     <Button
                       variant="outline"
                       size="sm"
@@ -141,7 +141,7 @@ const PortfolioSection = ({ id }: PortfolioSectionProps) => {
                       <Code className="mr-2 h-4 w-4" /> Setting
                     </Button>
                   }
-                  {isLoggedIn &&
+                  {isLoggedIn && user.isAdmin &&
                     <Button
                       variant="outline"
                       size="sm"
@@ -162,7 +162,7 @@ const PortfolioSection = ({ id }: PortfolioSectionProps) => {
             View All Projects <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
           {
-            isLoggedIn && <Button
+            isLoggedIn && user.isAdmin && <Button
               variant="outline"
               size="sm"
               onClick={createProductHandler}

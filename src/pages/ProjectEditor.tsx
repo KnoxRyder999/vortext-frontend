@@ -15,7 +15,7 @@ const defaultProject = {
 };
 
 const ProjectEditor = () => {
-  const { isLoggedIn } = useSelector(store => store['auth'])
+  const { isLoggedIn, user } = useSelector(store => store['auth'])
   const { list, editFlag, selected } = useSelector(store => store['projects'])
   const [data, setData] = useState(editFlag ? list.find(it => it.id === selected) : defaultProject);
   const [pending, setPending] = useState(false);
@@ -97,7 +97,7 @@ const ProjectEditor = () => {
     }
   }
 
-  return (isLoggedIn &&
+  return (isLoggedIn && user.isAdmin &&
     <div className="flex w-full  bg-gradient-to-b from-black to-gray-600 min-h-[100vh]">
       <div className="max-w-2xl mx-auto mt-10 p-6 bg-gray-800/50 hover:bg-gray-800/80 border-purple-900/50 border-[2px] text-[white] max-w-[600px] w-full shadow-md rounded-md">
         <h2 className="text-4xl text-center font-bold mb-6 text-white">
