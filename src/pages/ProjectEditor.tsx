@@ -55,6 +55,8 @@ const ProjectEditor = () => {
   const handleVideo = async e => {
     try {
       setPending(true)
+      document.body.style.pointerEvents = 'none'
+      document.body.classList.add('loading')
       if (e.target.files.length > 0) {
         let formData = new FormData()
         formData.append('file', e.target.files[0])
@@ -69,6 +71,8 @@ const ProjectEditor = () => {
       alert('upload failed. check console')
     } finally {
       setPending(false)
+      document.body.style.pointerEvents = 'auto'
+      document.body.classList.remove('loading')
     }
   }
 
@@ -77,7 +81,7 @@ const ProjectEditor = () => {
   }
 
   const handleSave = async () => {
-    if(pending) return;
+    if (pending) return;
     if (data.name && data.name !== "") {
       if (editFlag) {
         dispatch(projectActions.update(selected, data))
@@ -199,7 +203,7 @@ const ProjectEditor = () => {
           {/* Show photo previews */}
           {data.photos.length > 0 && (
             <div className="mt-3 grid grid-cols-3 gap-3">
-              {data.photos.map((url, idx) => 
+              {data.photos.map((url, idx) =>
                 <div className="relative" key={idx + "photos"}>
                   <div className="absolute w-full h-full flex justify-center items-center">
                     <span className='text-[30px] hover:scale-[4] transition-transform cursor-pointer duration-[0.5s] text-[#ff0] text-bolder' onClick={() => deletePhoto(idx)}>X</span>
@@ -238,13 +242,13 @@ const ProjectEditor = () => {
 
           <div className="flex justify-end space-x-4 pt-6">
             <button
-              disabled = {pending}
+              disabled={pending}
               onClick={handleSave}
               className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded disabled:opacity-[0.5]"
             > {editFlag ? "Change this" : "Create a New"} Project
             </button>
             <button
-              disabled = {pending}
+              disabled={pending}
               onClick={cancelHandler}
               className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold px-5 py-2 rounded disabled:opacity-[0.5]"
             >

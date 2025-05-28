@@ -15,6 +15,8 @@ const Profile = () => {
     const inputHandler = async (key, value) => {
         if (key === "avatar") {
             setPending(true)
+            document.body.style.pointerEvents = 'none'
+            document.body.classList.add('loading')
             let formData = new FormData();
             formData.append("file", value)
             formData.append("upload_preset", "vortexbytes")
@@ -23,13 +25,15 @@ const Profile = () => {
             const res = await response.json();
             setUserInfo(prev => ({ ...prev, [key]: res.secure_url }))
             setPending(false)
+            document.body.style.pointerEvents = 'auto'
+            document.body.classList.remove('loading')
         } else setUserInfo(prev => ({ ...prev, [key]: value }))
         if (key === 'changepassword') setEnableChangePassword(!enableChangePassword)
     }
 
     const handleSave = () => {
-        if(pending) return
-        if(enableChangePassword && userInfo.newpassword !== userInfo.confirmpassword) {
+        if (pending) return
+        if (enableChangePassword && userInfo.newpassword !== userInfo.confirmpassword) {
             alert('Confirm password, please')
             return
         }
@@ -43,7 +47,7 @@ const Profile = () => {
                 onClick={() => navigate('/')}>Back
             </div>
             <button className="fixed top-6 right-10 h-[40px] w-[100px] bg-[#253] border-[1px] border-[#527] rounded-[5px] center cursor-pointer hover:bg-[#777] text-[#fa6]"
-                disabled = {pending}
+                disabled={pending}
                 onClick={handleSave}>Change
             </button>
             <div className="flex flex-wrap max-w-[1000px] w-full gap-10 text-white justify-between items-center px-16">

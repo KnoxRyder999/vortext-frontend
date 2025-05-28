@@ -20,6 +20,8 @@ const RegisterModal: React.FC = () => {
     const handleChange = async (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value, files } = e.target;
         if (name === 'avatar' && files) {
+            document.body.style.pointerEvents = 'none'
+            document.body.classList.add('loading')
             let formData = new FormData()
             formData.append('file', files[0])
             formData.append("upload_preset", "vortexbytes")
@@ -27,6 +29,8 @@ const RegisterModal: React.FC = () => {
             if (!response.ok) throw new Error(`Upload failed with status: ${response.status}`);
             const res = await response.json();
             setUserData({ ...userData, avatar: res.secure_url });
+            document.body.style.pointerEvents = 'auto'
+            document.body.classList.remove('loading')
         } else {
             setUserData({ ...userData, [name]: value });
         }
@@ -43,7 +47,7 @@ const RegisterModal: React.FC = () => {
                             <h2 className="text-xl pt-5 font-semibold">Register</h2>
                             <label className='cursor-pointer float-right' >
                                 <img
-                                    src={userData.avatar ? URL.createObjectURL(userData.avatar) : "add-man.svg"}
+                                    src={userData.avatar || "add-man.svg"}
                                     alt="Avatar preview"
                                     className="w-[100px] h-[100px] rounded-full border-[1px] border-[#558] object-cover mx-auto hover:border-border"
                                 />
