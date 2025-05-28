@@ -7,7 +7,7 @@ const apiClient = axios.create({
   // baseURL: 'https://vortex-backend-production.up.railway.app/api', // Replace with your actual backend URL
   headers: {
     'Content-Type': 'application/json',
-    'Authorization': `Bearer ${token}`
+    'authorization': `Bearer ${token}`
   },
 });
 

@@ -1,36 +1,15 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Code, Globe, Users } from "lucide-react";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
 
 interface AboutSectionProps {
   id: string;
 }
 
 const AboutSection = ({ id }: AboutSectionProps) => {
-  const teamMembers = [
-    {
-      name: "𝔇𝔞𝔯𝔨 𝔪𝔞𝔤𝔦𝔠",
-      name1: "Adam dean",
-      role: "Lead Developer",
-      skills: "Script Development, UI/UX Design",
-      image: "magic.jpeg",
-    },
-    {
-      name: "VortexBytes",
-      name1: "Fawaz Hassan",
-      role: "3D Modeler",
-      skills: "MLO Creation, Asset Design",
-      image: "Fawaz.jpg",
-    },
-    {
-      name: "Axelknight",
-      name1: "Axelknight",
-      role: "Server Specialist",
-      skills: "Server Configuration, Performance Optimization",
-      image: "./adam.jpg",
-    },
-  ];
-
+  const userlist = useSelector(store => store['auth'].adminList)
   return (
     <section
       id={id}
@@ -114,14 +93,14 @@ const AboutSection = ({ id }: AboutSectionProps) => {
           Meet The Team
         </h3>
         <div className="grid md:grid-cols-3 gap-8">
-          {teamMembers.map((member, index) => (
+          {userlist.map((member, index) => (
             <Card
               key={index}
               className="bg-gray-800/50 border-purple-900/50 overflow-hidden"
             >
               <div className="h-58 overflow-hidden">
                 <img
-                  src={member.image}
+                  src={member.avatar}
                   alt={member.name}
                   className="w-full object-cover object-center"
                 />
@@ -131,7 +110,6 @@ const AboutSection = ({ id }: AboutSectionProps) => {
                   {member.name}
                 </h4>
                 <p className="text-purple-400 mb-3">{member.role}</p>
-                <p className="text-gray-300 text-sm">{member.skills}</p>
               </CardContent>
             </Card>
           ))}

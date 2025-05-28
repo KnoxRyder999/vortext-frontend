@@ -99,9 +99,35 @@
     @apply bg-background text-foreground;
   }
 }
+body.loading {
+  cursor: wait !important;
+}
 
+* {
+  transition-duration: 0.5s;
+}
 .center {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.hoverview {
+  overflow: hidden;
+}
+.hoverview:hover .child1 img {
+  opacity: 0.1;
+}
+.hoverview:hover .child2 {
+  top: 0;
+  opacity: 0.9;
+}
+.change:hover img{
+  opacity: 0.3;
+}
+.change:hover span {
+  opacity: 1;
+  scale: 3;
+  top: 150px;
+  left: 50%;
+  color: #ff0;
 }

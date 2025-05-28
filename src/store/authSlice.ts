@@ -89,9 +89,11 @@ export const slice = createSlice({
       state.user = action.payload;
     },
     logout: (state) => {
-      window.localStorage.removeItem('token')
-      state.isLoggedIn = false;
-      state.user = null;
+      if(confirm("Are you really going to log out?")) {
+        window.localStorage.removeItem('token')
+        state.isLoggedIn = false;
+        state.user = null;
+      }
     },
     adminListSlice: (state, { payload }) => {
       state.adminList = payload

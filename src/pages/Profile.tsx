@@ -28,11 +28,13 @@ const Profile = () => {
     }
 
     const handleSave = () => {
+        if(pending) return
         if(enableChangePassword && userInfo.newpassword !== userInfo.confirmpassword) {
             alert('Confirm password, please')
             return
         }
         dispatch(userApi.update(user.id, userInfo))
+        navigate('/')
     }
 
     return (isLoggedIn &&
@@ -40,9 +42,10 @@ const Profile = () => {
             <div className="fixed top-6 left-10 h-[40px] w-[100px] bg-[#234] border-[1px] border-[#527] rounded-[5px] center cursor-pointer hover:bg-[#777] text-[#ff0]"
                 onClick={() => navigate('/')}>Back
             </div>
-            <div className="fixed top-6 right-10 h-[40px] w-[100px] bg-[#253] border-[1px] border-[#527] rounded-[5px] center cursor-pointer hover:bg-[#777] text-[#fa6]"
+            <button className="fixed top-6 right-10 h-[40px] w-[100px] bg-[#253] border-[1px] border-[#527] rounded-[5px] center cursor-pointer hover:bg-[#777] text-[#fa6]"
+                disabled = {pending}
                 onClick={handleSave}>Change
-            </div>
+            </button>
             <div className="flex flex-wrap max-w-[1000px] w-full gap-10 text-white justify-between items-center px-16">
                 <label className="relative cursor-pointer">
                     <input type="file" className='px-1 outline-none border-[3px] focus:border-[#6af] text-[#222]' onChange={e => inputHandler('avatar', e.target.files[0])} hidden />
