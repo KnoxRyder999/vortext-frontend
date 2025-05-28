@@ -55,7 +55,7 @@ export const projectActions = {
       api.put('/projects/' + id, data)
         .then((res: Project) => {
           toast.success('Project created');
-          dispatch(addProject(res));
+          dispatch(updateProject(res));
           resolve("");
         })
     } catch (err) {

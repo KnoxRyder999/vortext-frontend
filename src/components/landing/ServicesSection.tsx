@@ -9,35 +9,35 @@ interface ServiceSectionProps {
 const ServicesSection = ({ id }: ServiceSectionProps) => {
   const services = [
     {
-      icon: <Code className="h-10 w-10 text-purple-500" />,
+      icon: <Code className="text-purple-500" />,
       title: "Custom Scripts",
       description:
         "Tailor-made scripts for QBCore, ESX, and standalone implementations. Optimized for performance with clean code.",
       features: ["QBCore Compatible", "ESX Ready", "Standalone Options", "Optimized Code"],
     },
     {
-      icon: <Server className="h-10 w-10 text-blue-500" />,
+      icon: <Server className="text-blue-500" />,
       title: "Server Setups",
       description:
         "Complete server configuration and deployment. From basic setups to complex ecosystems with custom features.",
       features: ["Framework Installation", "Resource Configuration", "Performance Tuning", "Security Hardening"],
     },
     {
-      icon: <Layout className="h-10 w-10 text-green-500" />,
+      icon: <Layout className="text-green-500" />,
       title: "UI/UX Systems",
       description:
         "Modern, responsive interfaces for your FiveM server. Intuitive design that enhances player experience.",
       features: ["Custom HUDs", "Inventory Systems", "Phone Interfaces", "Admin Panels"],
     },
     {
-      icon: <Map className="h-10 w-10 text-yellow-500" />,
+      icon: <Map className="text-yellow-500" />,
       title: "MLOs & Mods",
       description:
         "Custom map modifications and interior designs to make your server unique and immersive.",
       features: ["Interior Designs", "Custom Buildings", "Map Additions", "Optimized for Performance"],
     },
     {
-      icon: <Tv className="h-10 w-10 text-red-500" />,
+      icon: <Tv className="text-red-500" />,
       title: "Live Support",
       description:
         "Ongoing technical assistance and troubleshooting for all our products and services.",
@@ -63,11 +63,11 @@ const ServicesSection = ({ id }: ServiceSectionProps) => {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="flex flex-wrap gap-8">
           {services.map((service, index) => (
             <Card
               key={index}
-              className="bg-gray-800/50 hover:bg-gray-800/80 border-purple-900/50 transition-all duration-300 hover:-translate-y-1"
+              className="bg-gray-800/50 w-[18%] hover:bg-gray-800/80 border-purple-900/50 transition-all duration-300 hover:-translate-y-1"
             >
               <CardContent className="p-8">
                 <div className="mb-6">{service.icon}</div>
