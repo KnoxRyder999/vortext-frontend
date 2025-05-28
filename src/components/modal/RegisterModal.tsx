@@ -17,10 +17,16 @@ const RegisterModal: React.FC = () => {
         avatar: null,
     });
 
-    const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const handleChange = async (e: ChangeEvent<HTMLInputElement>) => {
         const { name, value, files } = e.target;
         if (name === 'avatar' && files) {
-            setUserData({ ...userData, avatar: files[0] });
+            let formData = new FormData()
+            formData.append('file', files[0])
+            formData.append("upload_preset", "vortexbytes")
+            const response = await fetch("https://api.cloudinary.com/v1_1/djta4ar8o/upload", { method: "POST", body: formData, });
+            if (!response.ok) throw new Error(`Upload failed with status: ${response.status}`);
+            const res = await response.json();
+            setUserData({ ...userData, avatar: res.secure_url });
         } else {
             setUserData({ ...userData, [name]: value });
         }

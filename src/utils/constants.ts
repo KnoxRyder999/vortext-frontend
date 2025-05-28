@@ -50,3 +50,15 @@ export const revenueData = [
   { name: "Jun", value: 600 },
   { name: "Jul", value: 700 },
 ];
+
+export const defaultProject = {
+  name: 'VB Advanced Jobs System',
+  description: 'A comprehensive jobs system with unique progression mechanics and dynamic missions for roleplaying servers.',
+  category: 'SCRIPTS',
+  client: 'MidwestRP',
+  clientPublic: true,
+  skills: ['QBCore', 'ESX Compatible', 'Lua', 'HTML/CSS/JS'],
+  photos: ['vortex-1.png', 'vortex-2.png', 'vortex-3.png', 'vortex-4.png'],
+  video: 'night-city-in-gta-5.1920x1080.mp4',
+};
+

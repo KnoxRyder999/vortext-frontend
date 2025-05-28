@@ -11,6 +11,7 @@ import Navbar from "@/components/landing/Navbar";
 import RegisterModal from "@/components/modal/RegisterModal";
 import { projectActions } from "@/store/projectSlice";
 import { useDispatch } from "react-redux";
+import { userApi } from "@/store/authSlice";
 
 const Landing = () => {
   const [activeSection, setActiveSection] = useState("home");
@@ -18,6 +19,7 @@ const Landing = () => {
 
   useEffect(() => {
     dispatch(projectActions['getAll']())
+    dispatch(userApi.getAdmin())
   }, []);
 
   return (

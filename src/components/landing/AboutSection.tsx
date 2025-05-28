@@ -40,7 +40,7 @@ const AboutSection = ({ id }: AboutSectionProps) => {
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
             <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-blue-600">
-              About VortexBytes
+              About StructoNation
             </span>
           </h2>
           <div className="h-1 w-20 bg-gradient-to-r from-purple-500 to-blue-500 mx-auto mb-8 rounded-full"></div>
@@ -53,7 +53,7 @@ const AboutSection = ({ id }: AboutSectionProps) => {
           <div>
             <h3 className="text-2xl font-bold mb-6 text-white">Our Story</h3>
             <p className="text-gray-300 mb-4">
-              VortexBytes began when a group of passionate FiveM developers
+              StructoNation began when a group of passionate FiveM developers
               noticed a gap in the marketplace: high-quality, optimized scripts
               that didn't tank server performance.
             </p>

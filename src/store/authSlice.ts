@@ -23,13 +23,14 @@ export interface CreateUserPayload {
 }
 
 export const userApi = {
-  getAll: () => api.get<User[]>('/users'),
+  getAdmin: () => dispatch => api.get<User[]>('/users')  //get all admin to show out team.
+    .then(res => dispatch(adminListSlice(res)))
+    .catch(err => console.log(err))
+  ,
   getById: (id: number) => api.get<User>(`/users/${id}`),
-  register: data => dispatch => {
+  register: (data: User) => dispatch => {
     try {
-      const formData = new FormData();
-      for (let key in data) formData.append(key, data[key])
-      api.post('/users/register', formData, { headers: { 'Content-Type': 'multipart/form-data' } })
+      api.post('/users/register', data)
         .then(res => {
           toast.success("Register successfully!")
           localStorage.setItem('token', res['token'])
@@ -59,19 +60,16 @@ export const userApi = {
       console.log(e);
     }
   },
-  update: (id: number, data: Partial<CreateUserPayload>) => dispatch => {
-    const formData = new FormData();
-    if (data.name) formData.append('name', data.name);
-    if (data.email) formData.append('email', data.email);
-    if (data.password) formData.append('password', data.password);
-    if (data.avatar) formData.append('avatar', data.avatar);
-
-    dispatch(closeModalSlice());
-    return api.put<User>(`/users/${id}`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+  update: (id: number, data) => dispatch => {
+    api.put<User>(`/users/${id}`, data)
+      .then(res => {
+        dispatch(login(res))
+        dispatch(closeModalSlice());
+      })
+      .catch(err => {
+        console.log(err);
+        alert(JSON.stringify(err.response.data))
+      })
   },
 
   delete: (id: number) => api.delete<void>(`/users/${id}`),
@@ -83,6 +81,7 @@ export const slice = createSlice({
   initialState: {
     isLoggedIn: false,
     user: null,
+    adminList: []
   },
   reducers: {
     login: (state, action) => {
@@ -94,8 +93,11 @@ export const slice = createSlice({
       state.isLoggedIn = false;
       state.user = null;
     },
+    adminListSlice: (state, { payload }) => {
+      state.adminList = payload
+    }
   },
 });
 
-export const { login, logout } = slice.actions;
+export const { login, logout, adminListSlice } = slice.actions;
 export default slice.reducer;

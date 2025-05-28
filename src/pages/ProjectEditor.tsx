@@ -1,8 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { closeProjetPage, projectActions } from '@/store/projectSlice';
-import { Close } from '@radix-ui/react-toast';
 
 const defaultProject = {
   name: '',
@@ -16,11 +15,10 @@ const defaultProject = {
 };
 
 const ProjectEditor = () => {
-  const { user, isLoggedIn } = useSelector(store => store['auth'])
-  const { list, current, editFlag, selected } = useSelector(store => store['projects'])
-  const [data, setData] = useState(editFlag && list.find(it => it.id === selected) || defaultProject);
-  const [previewPhotos, setPreviewPhotos] = useState<string[]>(data.photos || []);
-  const [previewVideo, setPreviewVideo] = useState<string | null>(data.video || []);
+  const { isLoggedIn } = useSelector(store => store['auth'])
+  const { list, editFlag, selected } = useSelector(store => store['projects'])
+  const [data, setData] = useState(editFlag ? list.find(it => it.id === selected) : defaultProject);
+  const [pending, setPending] = useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -28,53 +26,78 @@ const ProjectEditor = () => {
   const skillbox = useRef();
 
   const handleChange = (field: string, value: any) => {
-    if (field === 'photos') {
-      setData(prev => ({ ...prev, photos: value }));
-      const photoURLs = value.map((file: File) => URL.createObjectURL(file))
-      setPreviewPhotos(photoURLs);
-    } else if (field === 'video') {
-      setData(prev => ({ ...prev, video: value }));
-      if (value) setPreviewVideo(URL.createObjectURL(value));
-      else setPreviewVideo(null);
-    } else {
-      setData(prev => ({ ...prev, [field]: value }));
-    }
+    setData(prev => ({ ...prev, [field]: value }));
   };
+
+  const handleImages = async e => {
+    try {
+      setPending(true)
+      if (e.target.files.length > 0) {
+        let newfilelist = []
+        for (let file of e.target.files) {
+          let formData = new FormData();
+          formData.append("file", file)
+          formData.append("upload_preset", "vortexbytes")
+          const response = await fetch("https://api.cloudinary.com/v1_1/djta4ar8o/upload", { method: "POST", body: formData, });
+          if (!response.ok) throw new Error(`Upload failed with status: ${response.status}`);
+          const res = await response.json();
+          newfilelist.push(res.secure_url)
+        }
+        setData(prev => ({ ...prev, photos: prev.photos.concat(newfilelist) }))
+      }
+    } catch (e) {
+      console.log(e);
+      alert('upload failed. check console')
+    } finally {
+      setPending(false)
+    }
+  }
+  const handleVideo = async e => {
+    try {
+      setPending(true)
+      if (e.target.files.length > 0) {
+        let formData = new FormData()
+        formData.append('file', e.target.files[0])
+        formData.append("upload_preset", "vortexbytes")
+        const response = await fetch("https://api.cloudinary.com/v1_1/djta4ar8o/upload", { method: "POST", body: formData, });
+        if (!response.ok) throw new Error(`Upload failed with status: ${response.status}`);
+        const res = await response.json();
+        setData(prev => ({ ...prev, video: res.secure_url }))
+      }
+    } catch (e) {
+      console.log(e);
+      alert('upload failed. check console')
+    } finally {
+      setPending(false)
+    }
+  }
 
   const deletePhoto = idx => {
     setData(prev => ({ ...prev, photos: prev.photos.filter((it, id) => id !== idx) }));
-    setPreviewPhotos(items => items.filter((it, id) => id !== idx));
   }
 
   const handleSave = async () => {
-    if (!data.name) {
-      alert("Name should be included.")
-      return
-    } else {
-      let formData = new FormData();
-      for (let key in data) {
-        if (key === 'photos') {
-          if (data[key].length > 0) {
-            for (let p of data[key]) formData.append('photos', p)
-          }
-        } else formData.append(key, data[key]);
-      }
+    if(pending) return;
+    if (data.name && data.name !== "") {
       if (editFlag) {
-        dispatch(projectActions.update(selected, formData))
-          .then(res => navigate('/'))
+        dispatch(projectActions.update(selected, data))
+          .then(() => navigate('/'))
       } else {
-        dispatch(projectActions.create(formData))
-          .then(res => navigate('/'))
+        dispatch(projectActions.create(data))
+          .then(() => navigate('/'))
       }
-    }
-  };
-
+    } else {
+      alert('project name is required!')
+    };
+  }
   const cancelHandler = () => {
-    dispatch(closeProjetPage())
-    navigate('/')
+    if (confirm("You may loss some datas selected!")) {
+      dispatch(closeProjetPage())
+      navigate('/')
+    }
   }
 
-  return ( isLoggedIn &&
+  return (isLoggedIn &&
     <div className="flex w-full  bg-gradient-to-b from-black to-gray-600 min-h-[100vh]">
       <div className="max-w-2xl mx-auto mt-10 p-6 bg-gray-800/50 hover:bg-gray-800/80 border-purple-900/50 border-[2px] text-[white] max-w-[600px] w-full shadow-md rounded-md">
         <h2 className="text-4xl text-center font-bold mb-6 text-white">
@@ -146,7 +169,7 @@ const ProjectEditor = () => {
                     <div className="flex bg-primary py-1 rounded-full px-4"> {item}
                     </div>
                     <span className='rounded-full text-[10px] pt-2 bg-[#830] px-3 py-1 hover:scale-[1.2] transition-transform cursor-pointer duration-[0.5s] text-[#ff0] text-bolder'
-                      onClick={e => { handleChange('skills', data.skills.filter((it, i) => i !== idx)) }}
+                      onClick={() => { handleChange('skills', data.skills.filter((it, i) => i !== idx)) }}
                     >X</span>
                   </div>
                 )
@@ -154,7 +177,7 @@ const ProjectEditor = () => {
               <div className="flex w-full gap-10">
                 <input className="bg-[#334] w-full border border-gray-300 rounded px-3 py-1 focus:outline-none focus:ring-2 focus:ring-blue-500" ref={skillbox} />
                 <button className="flex bg-[#090] rounded-[5px] px-4 pt-1"
-                  onClick={e => { handleChange('skills', data.skills.concat(skillbox.current.value)) }}
+                  onClick={() => { handleChange('skills', data.skills.concat(skillbox.current.value)) }}
                 > Add </button>
               </div>
 
@@ -168,27 +191,26 @@ const ProjectEditor = () => {
               type="file"
               accept="image/*"
               multiple
-              onChange={(e) => handleChange('photos', Array.from(e.target.files || []))}
+              onChange={handleImages}
               className="block w-full text-sm text-gray-300 border border-gray-300 rounded cursor-pointer focus:outline-none"
             />
           </div>
 
           {/* Show photo previews */}
-          {previewPhotos.length > 0 && (
+          {data.photos.length > 0 && (
             <div className="mt-3 grid grid-cols-3 gap-3">
-              {previewPhotos.map((url, idx) => (
+              {data.photos.map((url, idx) => 
                 <div className="relative" key={idx + "photos"}>
                   <div className="absolute w-full h-full flex justify-center items-center">
                     <span className='text-[30px] hover:scale-[4] transition-transform cursor-pointer duration-[0.5s] text-[#ff0] text-bolder' onClick={() => deletePhoto(idx)}>X</span>
                   </div>
                   <img
-                    key={idx}
                     src={url}
                     alt={`Preview ${idx + 1}`}
                     className="w-full h-32 object-cover rounded border"
                   />
                 </div>
-              ))}
+              )}
             </div>
           )}
 
@@ -198,16 +220,16 @@ const ProjectEditor = () => {
             <input
               type="file"
               accept="video/*"
-              onChange={(e) => handleChange('video', e.target.files?.[0] || null)}
+              onChange={handleVideo}
               className="block w-full text-sm text-gray-300 border border-gray-300 rounded cursor-pointer focus:outline-none"
             />
           </div>
 
           {/* Show video preview */}
-          {previewVideo && (
+          {data.video && (
             <div className="mt-4">
               <video
-                src={previewVideo}
+                src={data.video}
                 controls
                 className="w-full rounded shadow border"
               />
@@ -216,13 +238,15 @@ const ProjectEditor = () => {
 
           <div className="flex justify-end space-x-4 pt-6">
             <button
+              disabled = {pending}
               onClick={handleSave}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded"
-            > {editFlag ? "Edit" : "Create a New"} Project
+              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-5 py-2 rounded disabled:opacity-[0.5]"
+            > {editFlag ? "Change this" : "Create a New"} Project
             </button>
             <button
+              disabled = {pending}
               onClick={cancelHandler}
-              className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold px-5 py-2 rounded"
+              className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold px-5 py-2 rounded disabled:opacity-[0.5]"
             >
               Cancel
             </button>

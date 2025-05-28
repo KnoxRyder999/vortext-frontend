@@ -1,8 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { toast } from 'react-toastify';
 import { api } from '@/utils/api';
-import { boolean } from 'zod';
-import { useNavigate } from 'react-router-dom';
 
 export interface Project {
   id: number;
@@ -37,9 +35,9 @@ export const projectActions = {
     }
   },
 
-  create: data => async (dispatch) => new Promise((resolve, reject) => {
+  create: (data: Project) => async (dispatch) => new Promise((resolve, reject) => {
     try {
-      api.post('/projects', data, { headers: { 'Content-Type': 'multipart/form-data' } })
+      api.post('/projects', data)
         .then((res: Project) => {
           toast.success('Project created');
           dispatch(addProject(res));
@@ -52,19 +50,19 @@ export const projectActions = {
     }
   }),
 
-  update: (id: number, data: FormData) => async (dispatch) => new Promise((resolve, reject) => {
-      try {
-        api.put('/projects/' + id, data, { headers: { 'Content-Type': 'multipart/form-data' } })
-          .then((res: Project) => {
-            toast.success('Project created');
-            dispatch(addProject(res));
-            resolve("");
-          })
-      } catch (err) {
-        toast.error('Failed to create project');
-        console.error(err);
-        reject("")
-      }
+  update: (id: number, data: Project) => async (dispatch) => new Promise((resolve, reject) => {
+    try {
+      api.put('/projects/' + id, data)
+        .then((res: Project) => {
+          toast.success('Project created');
+          dispatch(addProject(res));
+          resolve("");
+        })
+    } catch (err) {
+      toast.error('Failed to create project');
+      console.error(err);
+      reject("")
+    }
   }),
 
   remove: (id: number) => async (dispatch) => {

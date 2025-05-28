@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import { showModalSlice, showLoginModal } from "@/store/userModalSlice";
 import { logout } from "@/store/authSlice";
+import { useNavigate } from "react-router-dom";
 
 interface NavbarProps {
   activeSection: string;
@@ -13,6 +14,7 @@ interface NavbarProps {
 
 const Navbar = ({ activeSection, setActiveSection }: NavbarProps) => {
   const dispatch = useDispatch()
+  const navigator = useNavigate()
   const { isLoggedIn, user } = useSelector(store => store['auth'])
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -54,21 +56,20 @@ const Navbar = ({ activeSection, setActiveSection }: NavbarProps) => {
   }
   return (
     <header
-      className={`fixed w-full top-0 z-40 transition-all duration-300 ${isScrolled ? "bg-black/90 backdrop-blur-sm shadow-lg" : "bg-transparent"
-        }`}
+      className={`fixed w-full top-0 z-40 transition-all duration-300 ${isScrolled ? "bg-black/90 backdrop-blur-sm shadow-lg" : "bg-transparent"}`}
     >
       <div className="container mx-auto px-4 py-3 md:py-4 flex items-center justify-between">
         <div className="flex gap-10">
-          <a href="#" className="flex items-center space-x-2">
+          <div className="flex cursor-pointer items-center space-x-2" onClick={() => navigator('/dashboard') }>
             <span className="text-2xl font-bold ">
               StructoNation
             </span>
-          </a>
+          </div>
           {
             isLoggedIn &&
             <div className="flex gap-8">
               <button
-                onClick={onUserHandler}
+                onClick={() => navigator('/profile')}
                 className={`text-sm font-medium transition-colors hover:text-purple-400 text-default`}
               >Profile</button>
               {
@@ -109,6 +110,7 @@ const Navbar = ({ activeSection, setActiveSection }: NavbarProps) => {
                 className="bg-purple-600 hover:bg-purple-700 text-white rounded-full"
               >
                 log out
+                <img src={user.avatar}alt="avatar" className="w-[40px] h-[40px] border-[2px] border-[#ff0] mr-[-16px] rounded-full " ></img>
               </Button>
               :
               <Button
@@ -151,13 +153,24 @@ const Navbar = ({ activeSection, setActiveSection }: NavbarProps) => {
                   {link.label}
                 </button>
               ))}
-              <Button
-                variant="default"
-                onClick={() => dispatch(showLoginModal())}
-                className="bg-purple-600 hover:bg-purple-700 text-white rounded-full"
-              >
-                login
-              </Button>
+              {
+                isLoggedIn ?
+                  <Button
+                    variant="default"
+                    onClick={() => dispatch(logout())}
+                    className="bg-purple-600 hover:bg-purple-700 text-white rounded-full"
+                  >
+                    log out
+                  </Button>
+                  :
+                  <Button
+                    variant="default"
+                    onClick={() => dispatch(showLoginModal())}
+                    className="bg-purple-600 hover:bg-purple-700 text-white rounded-full"
+                  >
+                    log in
+                  </Button>
+              }
             </nav>
           </div>
         </div>
