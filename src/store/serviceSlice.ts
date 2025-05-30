@@ -7,6 +7,7 @@ export interface Service {
 	name: string;
 	description: string;
 	photo: string;
+	product: string;
 }
 
 export const serviceActions = {

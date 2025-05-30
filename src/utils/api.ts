@@ -1,10 +1,10 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import { baseURL } from './constants';
 
 const token = localStorage.getItem('token'); // get saved JWT
 
 const apiClient = axios.create({
-  // baseURL: 'http://localhost:3000/api', // Replace with your actual backend URL
-  baseURL: 'https://vortex-backend-production.up.railway.app/api', // Replace with your actual backend URL
+  baseURL,
   headers: {
     'Content-Type': 'application/json',
     'authorization': `Bearer ${token}`

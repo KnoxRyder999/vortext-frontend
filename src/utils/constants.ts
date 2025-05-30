@@ -62,3 +62,5 @@ export const defaultProject = {
   video: 'night-city-in-gta-5.1920x1080.mp4',
 };
 
+export const baseURL = 'https://vortex-backend-production.up.railway.app/api'
+// export const baseURL = 'http://localhost:3000/api'

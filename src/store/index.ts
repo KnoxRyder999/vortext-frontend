@@ -3,13 +3,15 @@ import userModalSlice from './userModalSlice';
 import authSlice from './authSlice';
 import projectSlice from "./projectSlice";
 import serviceSlice from "./serviceSlice";
+import bankModal from "./bankModalSlice";
 
 export const store = configureStore({
   reducer: {
     auth: authSlice,
     modal: userModalSlice,
     projects: projectSlice,
-    services: serviceSlice
+    services: serviceSlice,
+    bank: bankModal
   },
 });
 

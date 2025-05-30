@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" class="bg-white">
+<head>
+  <meta charset="UTF-8" />
+  <title>Download Your Product</title>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const productURL = params.get("product");
+    if (productURL) {
+      const a = document.createElement('a')
+      a.href = "/uploads"
+      a.download = productURL
+      a.click()
+      document.body.removeChild(a)
+      window.location.href = `/`;
+    } else {
+      document.write("<h1>Invalid product or no download found.</h1>");
+    }
+  </script>
+</head>
+<body></body>
+</html>

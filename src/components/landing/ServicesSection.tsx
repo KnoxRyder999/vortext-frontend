@@ -5,14 +5,17 @@ import { Code, Layout, Server, Tv, Map } from "lucide-react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import ProductCard from "../modal/ProductCard";
 
 interface ServiceSectionProps {
   id: string;
 }
 const initModal = {
   name: "",
+  price: 0,
   description: "",
-  photo: "vortex-logo.png"
+  photo: "vortex-logo.png",
+  product: ""
 }
 let selected = 0
 
@@ -62,7 +65,7 @@ const ServicesSection = ({ id }: ServiceSectionProps) => {
     },
   ];
   const inputPhotoHandler = (key, value) => {
-    if (key === 'photo') {
+    if (key === 'photo' || key === 'product' ) {
       document.body.style.pointerEvents = 'none'
       document.body.classList.add('loading')
       let formData = new FormData();
@@ -86,6 +89,7 @@ const ServicesSection = ({ id }: ServiceSectionProps) => {
     }
   }
   const handleService = id => {
+    
     setShowModal(true)
     selected = id
     setModal(serviceProducts.find(item => item.id === id))
@@ -96,6 +100,8 @@ const ServicesSection = ({ id }: ServiceSectionProps) => {
     selected = 0
   }
   const saveHandler = () => {
+    console.log(modal);
+    
     if (user.isAdmin < 2) return navigate('/')
     setShowModal(false)
     if (selected === 0) dispatch(serviceActions.create(modal))
@@ -110,7 +116,7 @@ const ServicesSection = ({ id }: ServiceSectionProps) => {
     >
       {isLoggedIn && user.isAdmin > 1 && showModal &&
         <div className="fixed center top-0 left-0 w-[100vw] h-[100vh] bg-[rgba(0,0,0,0.6)] z-10 ">
-          <div className="flex w-[700px] gap-8 flex-col p-10 border-[1px] border-[#425] bg-[#112]">
+          <div className="flex w-[700px] gap-6 flex-col p-10 border-[1px] border-[#425] bg-[#112]">
             <label className="w-full cursor-pointer change relative">
               <input type="file" hidden onChange={e => inputPhotoHandler('photo', e.target.files[0])} />
               <img src={modal.photo} alt="cover" className="w-full h-[300px] border-[2px] border-[#436]" />
@@ -121,8 +127,17 @@ const ServicesSection = ({ id }: ServiceSectionProps) => {
               <input type="text" onChange={e => inputPhotoHandler('name', e.target.value)} className="bg-[#346] px-3 w-[500px] py-1" defaultValue={modal.name} />
             </label>
             <label className="w-full flex justify-between text-[20px]">
+              <span>price : </span>
+              <input type="number" onChange={e => inputPhotoHandler('price', e.target.value)} className="bg-[#346] px-3 w-[500px] py-1" defaultValue={modal.price} />
+            </label>
+            <label className="w-full flex justify-between text-[20px]">
               <span>description : </span>
-              <textarea onChange={e => inputPhotoHandler('description', e.target.value)} className="bg-[#346] px-3 w-[500px] h-[200px] py-1" defaultValue={modal.description} />
+              <textarea onChange={e => inputPhotoHandler('description', e.target.value)} className="bg-[#346] px-3 w-[500px] h-[120px] py-1" defaultValue={modal.description} />
+            </label>
+            <label className="w-full flex justify-between text-[20px] cursor-pointer">
+              <span>product : </span>
+              <span className="border-[1px] border-[#415] py-1 px-10">Click here to select and upload your product.</span>
+              <input type="file" hidden onChange={e => inputPhotoHandler('product', e.target.files[0])} />
             </label>
             <div className="w-full flex justify-around text-[20px]">
               <button className="bg-[#273] w-[100px] h-[40px] hover:bg-[#394] disabled:opacity-[0.5] "
@@ -172,21 +187,8 @@ const ServicesSection = ({ id }: ServiceSectionProps) => {
           ))}
         </div>
         <div className="flex flex-wrap gap-6 justify-between ">
-          {serviceProducts.map((item, index) => (
-            <div key={index}
-              onClick={() => handleService(item.id)}
-              className="bg-gray-800/50 w-[300px] relative hoverview cursor-pointer">
-              <div className="child1 mb-2">
-                <img src={item.photo} alt="cover" className="w-full h-[200px]" />
-                <h3 className="text-center text-[#bbb] text-xl font-bold text-white my-3">
-                  {item.name}
-                </h3>
-              </div>
-              <div className="child2 absolute top-10 opacity-0 p-4 text-[20px]">
-                <p>{item.description}</p>
-              </div>
-            </div>
-          ))}
+          {
+            serviceProducts.map((item, index) => <ProductCard key={index + "as"} {...{item, index, handleService}} /> )}
           {
             isLoggedIn && user && user.isAdmin > 1 &&
             <div onClick={handleNewService}
